@@ -1,4 +1,4 @@
-# Sequelize-Auto
+# Sequelize-Automate
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/nodejh/sequelize-automate.svg)](https://greenkeeper.io/)
 
