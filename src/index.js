@@ -2,6 +2,8 @@ const assert = require('assert');
 const _ = require('lodash');
 const Sequelize = require('sequelize');
 const debug = require('debug')('sequelize-automate');
+const { getModelDefinitions } = require('./util/table');
+const generate = require('./codeGenerate');
 
 class Automate {
   constructor(database, username, password, options) {
@@ -33,16 +35,13 @@ class Automate {
 
 
   /**
-   * run
-   * @param {object} params params
-   * @param {array} params.tables
-   * @param {array} params.skipTables
+   * Get all tables
+   * @param {object} options { tables, skipTables }
    */
-  async run(params) {
-    assert(_.isPlainObject(params), 'Invalid params.');
+  async getTables(options) {
     const tableNames = await this.getTableNames({
-      tables: params.tables,
-      skipTables: params.skipTables,
+      tables: options.tables,
+      skipTables: options.skipTables,
     });
 
     debug('tableNames: ', tableNames);
@@ -70,6 +69,47 @@ class Automate {
     this.sequelize.close();
     debug('sequelize close');
     return tables;
+  }
+
+
+  /**
+   * getTables
+   * @param {object} options
+   * @param {array} [options.tables]
+   * @param {array} [options.skipTables]
+   * @param {array} [options.skipTables]
+   * @param {boolean} [options.camelCase]
+   * @param {boolean} [options.output]
+   * @param {boolean} [options.dir]
+   * @param {boolean} [options.typesDir]
+   * @param {string} [options.type] js/ts/egg/midway/...
+   * @param {string} [options.dir] js/ts/egg/midway/...
+   */
+  async run(options) {
+    const {
+      tables = null,
+      skipTables = null,
+      camelCase = false,
+      output = false,
+      type = 'js',
+      dir,
+      typesDir,
+    } = options || {};
+    const allTables = await this.getTables({
+      tables,
+      skipTables,
+    });
+    const definitions = getModelDefinitions(allTables, {
+      camelCase,
+    });
+    debug('get model definitions');
+    if (output) {
+      generate(definitions, type, {
+        dir,
+        typesDir,
+      });
+    }
+    return definitions;
   }
 }
 
