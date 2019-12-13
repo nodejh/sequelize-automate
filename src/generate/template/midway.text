@@ -1,0 +1,57 @@
+import { IApplicationContext, providerWrapper } from '@ali/midway';
+import { DataTypes } from 'sequelize';
+import { IDB } from './db';
+
+export default async function setupModel(context: IApplicationContext) {
+  const db: IDB = await context.getAsync('DB');
+  const attributes = {
+    id: {
+      type: Sequelize.BIGINT,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+      field: 'id',
+    },
+    createdAt: {
+      type: Sequelize.DATE,
+      allowNull: false,
+      field: 'created_at',
+    },
+    updatedAt: {
+      type: Sequelize.DATE,
+      allowNull: false,
+      field: 'updated_at',
+    },
+    name: {
+      type: Sequelize.STRING(32),
+      allowNull: false,
+      field: 'name',
+    },
+    email: {
+      type: Sequelize.STRING(32),
+      allowNull: false,
+      field: 'name',
+    },
+  };
+
+  const options = {
+    tableName: 'user',
+    comment: 'table comment',
+    indexs: [{
+      name: 'uk_name_email',
+      unique: true,
+      fields: [
+        'name',
+        'email',
+      ],
+    }]
+  };
+  return db.sequelize.define('modelName', attributes, options);
+}
+
+providerWrapper([
+  {
+    id: 'modelName',
+    provider: setupModel,
+  },
+]);

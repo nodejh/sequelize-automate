@@ -1,5 +1,10 @@
 const _ = require('lodash');
 
+function getFieldName(fieldName, camelCase) {
+  return camelCase ? _.camelCase(fieldName) : fieldName;
+}
+
+
 /**
  * Get default value
  * @param {object} field field
@@ -55,7 +60,6 @@ function getDefaultValue(field, dialect) {
 
   return defaultValue;
 }
-
 
 /**
  * Get data type
@@ -164,7 +168,81 @@ function getDataType(field) {
   return attr;
 }
 
+/**
+ * Process a table
+ * @param {object} params { structures, allIndexs, options: { camelCase, dialect } }
+ * @return {object} { attributes: { filed: { attribute } } indexs: [{ name, type, fields }] }
+ */
+function processTable({
+  structures,
+  allIndexs,
+  options,
+}) {
+  const { camelCase, dialect } = options;
+  const attributes = {};
+  _.forEach(structures, (structure, fieldName) => {
+    const key = getFieldName(fieldName, camelCase);
+    attributes[key] = structure;
+    attributes[key].field = fieldName;
+    attributes[key].type = getDataType(structure);
+    attributes[key].defaultValue = getDefaultValue(structure, dialect);
+  });
+
+  const indexs = [];
+  _.forEach(allIndexs, (index) => {
+    const fields = index.fields.map((o) => o.attribute);
+    if (index.primary === true) {
+      _.forEach(fields, (fieldName) => {
+        const field = getFieldName(fieldName, camelCase);
+        attributes[field].primaryKey = true;
+      });
+    } else if (index.unique && fields.length === 1) {
+      const field = getFieldName(fields[0], camelCase);
+      attributes[field].unique = index.name;
+    } else {
+      indexs.push({
+        name: index.name,
+        unique: index.unique,
+        type: index.type,
+        fields,
+      });
+    }
+  });
+
+  return { attributes, indexs };
+}
+
+/**
+ * Get model definitions
+ * @param {object} tables { structures, indexs, foreignKeys }
+ * @param {object} options { camelCase }
+ * @return {object} [{ modelName, modelFileName, tableName, attributes, indexs }]
+ */
+function getModelDefinitions(tables, options) {
+  const { camelCase = false } = options || {};
+  const definitions = _.map(tables, (table, tableName) => {
+    const { attributes, indexs } = processTable({
+      structures: table.structures,
+      allIndexs: table.indexs,
+      options: { camelCase },
+    });
+
+    const modelName = `${getFieldName(tableName, camelCase)}Model`;
+    const modelFileName = getFieldName(tableName, camelCase);
+    return {
+      modelName,
+      modelFileName,
+      tableName,
+      attributes,
+      indexs,
+    };
+  });
+
+  return definitions;
+}
+
 module.exports = {
   getDefaultValue,
   getDataType,
+  getModelDefinitions,
 };

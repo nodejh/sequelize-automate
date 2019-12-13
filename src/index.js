@@ -2,13 +2,14 @@ const assert = require('assert');
 const _ = require('lodash');
 const Sequelize = require('sequelize');
 const debug = require('debug')('sequelize-automate');
-const { getModelDefinitions } = require('./util/table');
-const generate = require('./codeGenerate');
+const { getModelDefinitions } = require('./util/definition');
+const generate = require('./generate');
 
 class Automate {
   constructor(database, username, password, options) {
     debug('sequelize-automate constructor');
     this.options = options;
+    // https://sequelize.org/v5/class/lib/sequelize.js~Sequelize.html#instance-constructor-constructor
     this.sequelize = new Sequelize(database, username, password, options || {});
     this.queryInterface = this.sequelize.getQueryInterface();
   }
@@ -101,6 +102,7 @@ class Automate {
     });
     const definitions = getModelDefinitions(allTables, {
       camelCase,
+      dialect: this.options.dialect,
     });
     debug('get model definitions');
     if (output) {
