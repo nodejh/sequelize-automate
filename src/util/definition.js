@@ -4,6 +4,9 @@ function getFieldName(fieldName, camelCase) {
   return camelCase ? _.camelCase(fieldName) : fieldName;
 }
 
+function getModelName(tableName, camelCase) {
+  return `${getFieldName(tableName, camelCase)}Model`;
+}
 
 /**
  * Get default value
@@ -170,12 +173,13 @@ function getDataType(field) {
 
 /**
  * Process a table
- * @param {object} params { structures, allIndexs, options: { camelCase, dialect } }
- * @return {object} { attributes: { filed: { attribute } } indexs: [{ name, type, fields }] }
+ * @param {object} params { structures, allIndexs, foreignKeys, options: { camelCase, dialect } }
+ * @return {object} { attributes: { filed: { attribute } }, indexs: [{ name, type, fields }] }
  */
 function processTable({
   structures,
   allIndexs,
+  foreignKeys,
   options,
 }) {
   const { camelCase, dialect } = options;
@@ -209,6 +213,19 @@ function processTable({
     }
   });
 
+  _.forEach(foreignKeys, (foreignKey) => {
+    const {
+      columnName,
+      referencedTableName,
+      referencedColumnName,
+    } = foreignKey;
+    const filed = getFieldName(columnName, camelCase);
+    attributes[filed].references = {
+      key: referencedColumnName,
+      model: getModelName(referencedTableName, camelCase),
+    };
+  });
+
   return { attributes, indexs };
 }
 
@@ -224,10 +241,11 @@ function getModelDefinitions(tables, options) {
     const { attributes, indexs } = processTable({
       structures: table.structures,
       allIndexs: table.indexs,
+      foreignKeys: table.foreignKeys,
       options: { camelCase },
     });
 
-    const modelName = `${getFieldName(tableName, camelCase)}Model`;
+    const modelName = getModelName(tableName, camelCase);
     const modelFileName = getFieldName(tableName, modelFileNameCamelCase);
     return {
       modelName,

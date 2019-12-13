@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const debug = require('debug')('sequelize-automate');
 
 function getFileExtension({ type, fileType }) {
   if (type === 'ts' || type === 'midway') {
@@ -24,7 +25,7 @@ function write(codes, options) {
     const dir = code.fileType === 'model' ? options.dir : options.typesDir;
 
     const filePath = path.join(process.cwd(), dir, code.file);
-    console.log('filePath', filePath);
+    debug('write file', filePath);
     fs.writeFileSync(filePath, code.code);
   });
 }

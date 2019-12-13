@@ -73,6 +73,26 @@ class Automate {
     return tables;
   }
 
+  async getDefinitions(options) {
+    const {
+      tables,
+      skipTables,
+      camelCase,
+      modelFileNameCamelCase,
+    } = options;
+    const allTables = await this.getTables({
+      tables,
+      skipTables,
+    });
+    const definitions = getModelDefinitions(allTables, {
+      camelCase,
+      modelFileNameCamelCase,
+      dialect: this.options.dialect,
+    });
+    debug('get model definitions');
+    return definitions;
+  }
+
 
   /* eslint-disable max-len */
   /**
@@ -109,19 +129,14 @@ class Automate {
     assert(_.isBoolean(reset), 'Invalid params reset');
     assert(supportTypes.includes(type), 'type not support');
 
-    const allTables = await this.getTables({
+    const definitions = await this.getDefinitions({
       tables,
       skipTables,
-    });
-    const definitions = getModelDefinitions(allTables, {
       camelCase,
       modelFileNameCamelCase,
-      dialect: this.options.dialect,
     });
-    debug('get model definitions');
 
     const modelCodes = definitions.map((definition) => {
-      // const file = definition.modelFileName;
       const { modelFileName } = definition;
       const fileType = 'model';
       const ext = getFileExtension({ type, fileType });

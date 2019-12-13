@@ -83,6 +83,19 @@ function processFieldProperties(field) {
           ),
         );
         break;
+      case 'references':
+        if (_.isPlainObject(value) && !_.isEmpty(value)) {
+          properties.push(
+            t.objectProperty(
+              t.identifier(key),
+              t.objectExpression([
+                t.objectProperty(t.identifier('key'), t.stringLiteral(value.key)),
+                t.objectProperty(t.identifier('model'), t.stringLiteral(value.model)),
+              ]),
+            ),
+          );
+        }
+        break;
       default:
         break;
     }
@@ -208,8 +221,8 @@ function generateCode(definition) {
   return code;
 }
 
-function generateDefinition() {
-  return '';
-}
+// function generateDefinition() {
+//   return '';
+// }
 
 module.exports = generateCode;
