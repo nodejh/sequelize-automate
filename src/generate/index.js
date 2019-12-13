@@ -1,13 +1,18 @@
 const generateMidway = require('./midway');
 
-function generate(definitions, type) {
+/**
+ * Generate model code
+ * @param {object} definition definition
+ * @param {string} type
+ */
+function generate(definition, type) {
   switch (type) {
     case 'midway':
-      generateMidway(definitions);
-      break;
+      return generateMidway(definition);
     default:
       break;
   }
+  return null;
 }
 
 module.exports = generate;

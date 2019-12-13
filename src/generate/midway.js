@@ -153,7 +153,6 @@ function processOptionsProperties(nodes, definition) {
  * @param {object} definition
  */
 function generateCode(definition) {
-  // console.log('definition', definition);
   const source = fs
     .readFileSync(join(__dirname, './template/midway.text'))
     .toString();
@@ -207,6 +206,10 @@ function generateCode(definition) {
 
   const { code } = generate(ast);
   return code;
+}
+
+function generateDefinition() {
+  return '';
 }
 
 module.exports = generateCode;

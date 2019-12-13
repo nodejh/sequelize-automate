@@ -215,11 +215,11 @@ function processTable({
 /**
  * Get model definitions
  * @param {object} tables { structures, indexs, foreignKeys }
- * @param {object} options { camelCase }
+ * @param {object} options { camelCase, modelFileNameCamelCase }
  * @return {object} [{ modelName, modelFileName, tableName, attributes, indexs }]
  */
 function getModelDefinitions(tables, options) {
-  const { camelCase = false } = options || {};
+  const { camelCase, modelFileNameCamelCase } = options || {};
   const definitions = _.map(tables, (table, tableName) => {
     const { attributes, indexs } = processTable({
       structures: table.structures,
@@ -228,7 +228,7 @@ function getModelDefinitions(tables, options) {
     });
 
     const modelName = `${getFieldName(tableName, camelCase)}Model`;
-    const modelFileName = getFieldName(tableName, camelCase);
+    const modelFileName = getFieldName(tableName, modelFileNameCamelCase);
     return {
       modelName,
       modelFileName,

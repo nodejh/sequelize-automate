@@ -4,6 +4,7 @@ const Sequelize = require('sequelize');
 const debug = require('debug')('sequelize-automate');
 const { getModelDefinitions } = require('./util/definition');
 const generate = require('./generate');
+const { getFileExtension, write } = require('./util/write');
 
 class Automate {
   constructor(database, username, password, options) {
@@ -73,45 +74,73 @@ class Automate {
   }
 
 
+  /* eslint-disable max-len */
   /**
    * getTables
    * @param {object} options
-   * @param {array} [options.tables]
-   * @param {array} [options.skipTables]
-   * @param {array} [options.skipTables]
-   * @param {boolean} [options.camelCase]
-   * @param {boolean} [options.output]
-   * @param {boolean} [options.dir]
-   * @param {boolean} [options.typesDir]
-   * @param {string} [options.type] js/ts/egg/midway/...
-   * @param {string} [options.dir] js/ts/egg/midway/...
+   * @param {array} [options.tables=null] use these tables.
+   * @param {array} [options.skipTables=null] skip these tables.
+   * @param {boolean} [options.camelCase=false] table field camel case, default is table field.
+   * @param {boolean} [options.modelFileNameCamelCase] model file name camel case, default is table name.
+   * @param {string} [options.dir='./models'] what directory to place the models.
+   * @param {string} [options.typesDir='./models'] what directory to place the models' definitions (for typescript).
+   * @param {boolean} [options.reset=false] remove dir and typesDir, default is false.
+   * @param {string} [options.type='js'] js/ts/egg/midway
    */
   async run(options) {
+    /* eslint-enable */
     const {
       tables = null,
       skipTables = null,
       camelCase = false,
-      output = false,
+      modelFileNameCamelCase = false,
+      dir = './models',
+      typesDir = './models',
+      reset = false,
       type = 'js',
-      dir,
-      typesDir,
     } = options || {};
+    const supportTypes = ['midway'];
+    assert(_.isNull(tables) || _.isArray(tables), 'Invalid params table');
+    assert(_.isNull(skipTables) || _.isArray(skipTables), 'invalid params table');
+    assert(_.isBoolean(camelCase), 'Invalid params camelCase');
+    assert(_.isBoolean(modelFileNameCamelCase), 'Invalid params modelFileNameCamelCase');
+    assert(_.isString(dir), 'Invalid params dir');
+    assert(_.isString(typesDir), 'Invalid params typesDir');
+    assert(_.isBoolean(reset), 'Invalid params reset');
+    assert(supportTypes.includes(type), 'type not support');
+
     const allTables = await this.getTables({
       tables,
       skipTables,
     });
     const definitions = getModelDefinitions(allTables, {
       camelCase,
+      modelFileNameCamelCase,
       dialect: this.options.dialect,
     });
     debug('get model definitions');
-    if (output) {
-      generate(definitions, type, {
-        dir,
-        typesDir,
-      });
+
+    const modelCodes = definitions.map((definition) => {
+      // const file = definition.modelFileName;
+      const { modelFileName } = definition;
+      const fileType = 'model';
+      const ext = getFileExtension({ type, fileType });
+      const file = `${modelFileName}.${ext}`;
+      const code = generate(definition, type);
+      return {
+        file,
+        code,
+        fileType,
+      };
+    });
+
+    const codes = _.concat([], modelCodes);
+
+    if (dir) {
+      write(codes, { dir });
     }
-    return definitions;
+
+    return codes;
   }
 }
 
