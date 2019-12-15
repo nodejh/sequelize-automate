@@ -1,0 +1,11 @@
+import * as Sequelize from 'sequelize';
+
+export interface IUserAttribute {
+  id:number;
+  createdAt:string;
+  updatedAt:string;
+  name: string;
+  email: string;
+}
+export interface IUserInstance extends Sequelize.Instance<IUserAttribute>, IUserAttribute { }
+export interface IUserModel extends Sequelize.Model<IUserInstance, IUserAttribute> { }

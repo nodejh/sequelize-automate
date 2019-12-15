@@ -4,7 +4,7 @@ const Sequelize = require('sequelize');
 const debug = require('debug')('sequelize-automate');
 const { getModelDefinitions } = require('./util/definition');
 const generate = require('./generate');
-const { getFileExtension, write } = require('./util/write');
+const { write } = require('./util/write');
 
 class Automate {
   constructor(database, username, password, options) {
@@ -136,23 +136,10 @@ class Automate {
       modelFileNameCamelCase,
     });
 
-    const modelCodes = definitions.map((definition) => {
-      const { modelFileName } = definition;
-      const fileType = 'model';
-      const ext = getFileExtension({ type, fileType });
-      const file = `${modelFileName}.${ext}`;
-      const code = generate(definition, type);
-      return {
-        file,
-        code,
-        fileType,
-      };
-    });
-
-    const codes = _.concat([], modelCodes);
-
+    const codes = generate(definitions, options.type);
+    console.log('codes', codes);
     if (dir) {
-      write(codes, { dir });
+      write(codes, { dir, typesDir });
     }
 
     return codes;
