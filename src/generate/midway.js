@@ -170,8 +170,9 @@ function processOptionsProperties(nodes, definition) {
 /**
  * Generate codes
  * @param {object} definition
+ * @param {object} options
  */
-function generateCode(definition) {
+function generateCode(definition, options) {
   const source = fs
     .readFileSync(join(__dirname, './template/midway.text'))
     .toString();
@@ -222,6 +223,10 @@ function generateCode(definition) {
       }
     },
   });
+
+  if (options.tsNoCheck) {
+    t.addComment(ast.program.body[0], 'leading', '@ts-nocheck', true);
+  }
 
   const { code } = generate(ast, generateOptions);
   return code;

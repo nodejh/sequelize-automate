@@ -106,6 +106,7 @@ class Automate {
    * @param {string} [options.typesDir='./models'] what directory to place the models' definitions (for typescript).
    * @param {boolean} [options.reset=false] remove dir and typesDir, default is false.
    * @param {string} [options.type='js'] js,ts,egg,midway,@ali/midway
+   * @param {string} [options.tsNoCheck=false] whether add @ts-nocheck to model files
    */
   async run(options) {
     /* eslint-enable */
@@ -118,6 +119,7 @@ class Automate {
       typesDir = './models',
       reset = false,
       type = 'js',
+      tsNoCheck = false, // @ts-nocheck
     } = options || {};
     const supportTypes = ['midway'];
     assert(_.isNull(tables) || _.isArray(tables), 'Invalid params table');
@@ -136,7 +138,10 @@ class Automate {
       modelFileNameCamelCase,
     });
 
-    const codes = generate(definitions, options.type);
+    const codes = generate(definitions, {
+      type,
+      tsNoCheck,
+    });
     if (dir) {
       await write(codes, { dir, typesDir });
     }

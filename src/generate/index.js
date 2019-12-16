@@ -1,12 +1,12 @@
 const _ = require('lodash');
 const midway = require('./midway');
 
-function processMidway(definitions) {
+function processMidway(definitions, options) {
   const modelCodes = definitions.map((definition) => {
     const { modelFileName } = definition;
     const fileType = 'model';
     const file = `${modelFileName}.ts`;
-    const code = midway.generateCode(definition);
+    const code = midway.generateCode(definition, options);
     return {
       file,
       code,
@@ -38,12 +38,13 @@ function processMidway(definitions) {
 /**
  * Generate model code
  * @param {object} definition definition
- * @param {string} type
+ * @param {object} options
  */
-function generate(definition, type) {
+function generate(definition, options) {
+  const { type, tsNoCheck } = options;
   switch (type) {
     case 'midway':
-      return processMidway(definition);
+      return processMidway(definition, { tsNoCheck });
     default:
       break;
   }
