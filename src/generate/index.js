@@ -4,30 +4,25 @@ const midway = require('./midway');
 function processMidway(definitions, options) {
   const modelCodes = definitions.map((definition) => {
     const { modelFileName } = definition;
-    const fileType = 'model';
     const file = `${modelFileName}.ts`;
     const code = midway.generateCode(definition, options);
     return {
       file,
       code,
-      fileType,
     };
   });
 
   const definitionCodes = definitions.map((definition) => {
     const { modelFileName } = definition;
-    const fileType = 'definition';
     const file = `${modelFileName}.d.ts`;
     const code = midway.generateDefinition(definition);
     return {
       file,
       code,
-      fileType,
     };
   });
 
   const dbCodes = {
-    fileType: 'model',
     file: 'db.ts',
     code: midway.generateDB(),
   };

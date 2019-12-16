@@ -103,7 +103,6 @@ class Automate {
    * @param {boolean} [options.camelCase=false] table field camel case, default is table field.
    * @param {boolean} [options.modelFileNameCamelCase] model file name camel case, default is table name.
    * @param {string} [options.dir='./models'] what directory to place the models.
-   * @param {string} [options.typesDir='./models'] what directory to place the models' definitions (for typescript).
    * @param {boolean} [options.reset=false] remove dir and typesDir, default is false.
    * @param {string} [options.type='js'] js,ts,egg,midway,@ali/midway
    * @param {string} [options.tsNoCheck=false] whether add @ts-nocheck to model files
@@ -116,7 +115,6 @@ class Automate {
       camelCase = false,
       modelFileNameCamelCase = false,
       dir = './models',
-      typesDir = './models',
       reset = false,
       type = 'js',
       tsNoCheck = false, // @ts-nocheck
@@ -127,7 +125,6 @@ class Automate {
     assert(_.isBoolean(camelCase), 'Invalid params camelCase');
     assert(_.isBoolean(modelFileNameCamelCase), 'Invalid params modelFileNameCamelCase');
     assert(_.isString(dir), 'Invalid params dir');
-    assert(_.isString(typesDir), 'Invalid params typesDir');
     assert(_.isBoolean(reset), 'Invalid params reset');
     assert(supportTypes.includes(type), 'type not support');
 
@@ -143,7 +140,7 @@ class Automate {
       tsNoCheck,
     });
     if (dir) {
-      await write(codes, { dir, typesDir });
+      await write(codes, dir);
     }
     return codes;
   }

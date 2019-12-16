@@ -286,11 +286,11 @@ function generateDefinition(definition) {
     plugins: ['typescript'],
   });
 
-  const commonName = `I${bigCamelCase(
+  const modelName = `I${bigCamelCase(
     definition.tableName,
-  )}`;
+  )}Model`;
   const attribute = ast.program.body[1];
-  attribute.declaration.id = t.identifier(`${commonName}Attribute`);
+  attribute.declaration.id = t.identifier(modelName);
   attribute.declaration.body = t.objectTypeAnnotation(
     _.map(definition.attributes, (field, key) => {
       const type = getObjectTypeAnnotation(field.type);
@@ -303,38 +303,20 @@ function generateDefinition(definition) {
     }),
   );
 
-  const tableInterface = ast.program.body[2];
-  tableInterface.declaration.id = t.identifier(`${commonName}Instance`);
+  const modelStatic = ast.program.body[2];
+  modelStatic.declaration.id = t.identifier(`${modelName}Static`);
 
   traverse(
-    tableInterface,
+    modelStatic,
     {
       enter(path) {
-        if (path.isIdentifier({ name: 'IUserAttribute' })) {
+        if (path.isIdentifier({ name: 'IUserModel' })) {
           const { node } = path;
-          node.name = `${commonName}Attribute`;
+          node.name = modelName;
         }
       },
     },
-    { path: tableInterface },
-  );
-  const modelInterface = ast.program.body[3];
-  modelInterface.declaration.id = t.identifier(`${commonName}Model`);
-  traverse(
-    modelInterface,
-    {
-      enter(path) {
-        if (path.isIdentifier({ name: 'IUserInstance' })) {
-          const { node } = path;
-          node.name = `${commonName}Instance`;
-        }
-        if (path.isIdentifier({ name: 'IUserAttribute' })) {
-          const { node } = path;
-          node.name = `${commonName}Attribute`;
-        }
-      },
-    },
-    { path: tableInterface },
+    { path: modelStatic },
   );
   const { code } = generate(ast, generateOptions);
   return code;

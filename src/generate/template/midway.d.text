@@ -1,11 +1,10 @@
-import * as Sequelize from 'sequelize';
+import { Model, BuildOptions } from 'sequelize';
 
-export interface IUserAttribute {
-  id:number;
-  createdAt:string;
-  updatedAt:string;
+export interface IUserModel extends Model {
+  id: number;
   name: string;
-  email: string;
 }
-export interface IUserInstance extends Sequelize.Instance<IUserAttribute>, IUserAttribute { }
-export interface IUserModel extends Sequelize.Model<IUserInstance, IUserAttribute> { }
+
+export type IUserModelStatic = typeof Model & {
+  new (values?: object, options?: BuildOptions): IUserModel;
+}
