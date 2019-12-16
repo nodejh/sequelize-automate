@@ -4,7 +4,7 @@ const debug = require('debug')('sequelize-automate');
 
 
 async function writeFile(code, dir, fileName) {
-  const dirPath = path.join(process.cwd(), dir);
+  const dirPath = dir.charAt(0) === '/' ? dir : path.join(process.cwd(), dir);
   await fs.ensureDir(dirPath);
   const filePath = path.join(dirPath, fileName);
   debug('write file', filePath);
