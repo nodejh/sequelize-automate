@@ -25,7 +25,13 @@ function processMidway(definitions) {
       fileType,
     };
   });
-  const codes = _.concat([], modelCodes, definitionCodes);
+
+  const dbCodes = {
+    fileType: 'model',
+    file: 'db.ts',
+    code: midway.generateDB(),
+  };
+  const codes = _.concat([], modelCodes, definitionCodes, dbCodes);
   return codes;
 }
 

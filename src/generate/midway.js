@@ -326,7 +326,15 @@ function generateDefinition(definition) {
   return code;
 }
 
+function generateDB() {
+  const code = fs
+    .readFileSync(join(__dirname, './template/midway.db.text'))
+    .toString();
+  return code;
+}
+
 module.exports = {
   generateCode,
   generateDefinition,
+  generateDB,
 };

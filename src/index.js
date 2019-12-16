@@ -105,7 +105,7 @@ class Automate {
    * @param {string} [options.dir='./models'] what directory to place the models.
    * @param {string} [options.typesDir='./models'] what directory to place the models' definitions (for typescript).
    * @param {boolean} [options.reset=false] remove dir and typesDir, default is false.
-   * @param {string} [options.type='js'] js/ts/egg/midway
+   * @param {string} [options.type='js'] js,ts,egg,midway,@ali/midway
    */
   async run(options) {
     /* eslint-enable */
@@ -137,11 +137,9 @@ class Automate {
     });
 
     const codes = generate(definitions, options.type);
-    console.log('codes', codes);
     if (dir) {
-      write(codes, { dir, typesDir });
+      await write(codes, { dir, typesDir });
     }
-
     return codes;
   }
 }
