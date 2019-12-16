@@ -8,6 +8,15 @@ const fs = require('fs');
 const { join } = require('path');
 const { bigCamelCase } = require('../util/wordCase');
 
+// https://github.com/babel/babel/issues/9804
+// support chinese character
+const generateOptions = {
+  jsescOption: {
+    minimal: true,
+  },
+  jsonCompatibleStrings: true,
+};
+
 function getDefaultValueExpression(defaultValue) {
   if (_.isString(defaultValue)) {
     if (defaultValue.toLowerCase().indexOf('sequelize') === 0) {
@@ -214,7 +223,7 @@ function generateCode(definition) {
     },
   });
 
-  const { code } = generate(ast);
+  const { code } = generate(ast, generateOptions);
   return code;
 }
 
@@ -322,7 +331,7 @@ function generateDefinition(definition) {
     },
     { path: tableInterface },
   );
-  const { code } = generate(ast);
+  const { code } = generate(ast, generateOptions);
   return code;
 }
 

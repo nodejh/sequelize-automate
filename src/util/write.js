@@ -21,7 +21,7 @@ async function write(codes, options) {
     const dir = code.fileType === 'model' ? options.dir : options.typesDir;
     return writeFile(code.code, dir, code.file);
   });
-  return Promise.all(list);
+  await Promise.all(list);
 }
 
 module.exports = {
