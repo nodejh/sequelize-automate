@@ -103,6 +103,7 @@ class Automate {
    * @param {boolean} [options.camelCase=false] table field camel case, default is table field.
    * @param {boolean} [options.modelFileNameCamelCase] model file name camel case, default is table name.
    * @param {string} [options.dir='./models'] what directory to place the models.
+    * @param {string} [options.typesDir=dir] what directory to place the models' definitions (for typescript), default is the same with dir.
    * @param {boolean} [options.reset=false] remove dir and typesDir, default is false.
    * @param {string} [options.type='js'] js,ts,egg,midway,@ali/midway
    * @param {string} [options.tsNoCheck=false] whether add @ts-nocheck to model files
@@ -119,6 +120,8 @@ class Automate {
       type = 'js',
       tsNoCheck = false, // @ts-nocheck
     } = options || {};
+    const typesDir = options.typesDir || dir;
+
     const supportTypes = ['midway'];
     assert(_.isNull(tables) || _.isArray(tables), 'Invalid params table');
     assert(_.isNull(skipTables) || _.isArray(skipTables), 'invalid params table');
@@ -140,7 +143,7 @@ class Automate {
       tsNoCheck,
     });
     if (dir) {
-      await write(codes, dir);
+      await write(codes, { dir, typesDir });
     }
     return codes;
   }

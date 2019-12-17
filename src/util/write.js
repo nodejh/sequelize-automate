@@ -14,10 +14,13 @@ async function writeFile(code, dir, fileName) {
 /**
  * Write files
  * @param {string} codes [{ file, code, fileType }]
- * @param {string} dir
+  * @param {object} options { dir, typesDir }
  */
-async function write(codes, dir) {
-  const list = codes.map((code) => writeFile(code.code, dir, code.file));
+async function write(codes, options) {
+  const list = codes.map((code) => {
+    const dir = code.fileType === 'model' ? options.dir : options.typesDir;
+    return writeFile(code.code, dir, code.file);
+  });
   await Promise.all(list);
 }
 
