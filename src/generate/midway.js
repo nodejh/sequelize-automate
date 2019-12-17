@@ -297,7 +297,7 @@ function generateDefinition(definition) {
       return Object.assign(
         t.objectTypeProperty(t.identifier(key), type),
         {
-          optional: false,
+          optional: !field.allowNull,
         },
       );
     }),
