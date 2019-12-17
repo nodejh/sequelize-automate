@@ -214,7 +214,7 @@ function generateCode(definition, options) {
             ObjectProperty: (path1) => {
               const { node: node1 } = path1;
               if (t.isIdentifier(node1.key, { name: 'id' })) {
-                node1.value = t.stringLiteral(definition.modelName);
+                node1.value = t.stringLiteral(bigCamelCase(definition.modelName));
               }
             },
           },
