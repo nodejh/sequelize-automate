@@ -286,11 +286,11 @@ function generateDefinition(definition) {
     plugins: ['typescript'],
   });
 
-  const modelName = `I${bigCamelCase(
+  const name = `I${bigCamelCase(
     definition.tableName,
-  )}Model`;
+  )}`;
   const attribute = ast.program.body[1];
-  attribute.declaration.id = t.identifier(modelName);
+  attribute.declaration.id = t.identifier(`${name}Attributes`);
   attribute.declaration.body = t.objectTypeAnnotation(
     _.map(definition.attributes, (field, key) => {
       const type = getObjectTypeAnnotation(field.type);
@@ -303,8 +303,26 @@ function generateDefinition(definition) {
     }),
   );
 
-  const modelStatic = ast.program.body[2];
-  modelStatic.declaration.id = t.identifier(`${modelName}Static`);
+  const model = ast.program.body[2];
+  traverse(
+    model,
+    {
+      enter(path) {
+        if (path.isIdentifier({ name: 'IUserModel' })) {
+          const { node } = path;
+          node.name = `${name}Model`;
+        }
+        if (path.isIdentifier({ name: 'IUserAttributes' })) {
+          const { node } = path;
+          node.name = `${name}Attributes`;
+        }
+      },
+    },
+    { path: model },
+  );
+
+  const modelStatic = ast.program.body[3];
+  modelStatic.declaration.id = t.identifier(`${name}Static`);
 
   traverse(
     modelStatic,
@@ -312,7 +330,7 @@ function generateDefinition(definition) {
       enter(path) {
         if (path.isIdentifier({ name: 'IUserModel' })) {
           const { node } = path;
-          node.name = modelName;
+          node.name = name;
         }
       },
     },

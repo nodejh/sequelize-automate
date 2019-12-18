@@ -1,8 +1,11 @@
 import { Model, BuildOptions } from 'sequelize';
 
-export interface IUserModel extends Model {
+export interface IUserAttributes {
   id: number;
   name: string;
+}
+
+export interface IUserModel extends IUserAttributes, Model {
 }
 
 export type IUserModelStatic = typeof Model & {
