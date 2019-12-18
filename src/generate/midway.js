@@ -322,7 +322,7 @@ function generateDefinition(definition) {
   );
 
   const modelStatic = ast.program.body[3];
-  modelStatic.declaration.id = t.identifier(`${name}Static`);
+  modelStatic.declaration.id = t.identifier(`${name}ModelStatic`);
 
   traverse(
     modelStatic,
