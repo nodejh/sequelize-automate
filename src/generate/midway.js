@@ -330,7 +330,7 @@ function generateDefinition(definition) {
       enter(path) {
         if (path.isIdentifier({ name: 'IUserModel' })) {
           const { node } = path;
-          node.name = name;
+          node.name = `${name}Model`;
         }
       },
     },
