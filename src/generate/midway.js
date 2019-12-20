@@ -7,165 +7,13 @@ const { default: traverse } = require('@babel/traverse');
 const fs = require('fs');
 const { join } = require('path');
 const { bigCamelCase } = require('../util/wordCase');
+const {
+  generateOptions,
+  processAttributesProperties,
+  processOptionsProperties,
+  getObjectTypeAnnotation,
+} = require('./common/index');
 
-// https://github.com/babel/babel/issues/9804
-// support chinese character
-const generateOptions = {
-  jsescOption: {
-    minimal: true,
-  },
-  jsonCompatibleStrings: true,
-};
-
-function getDefaultValueExpression(defaultValue) {
-  if (_.isString(defaultValue)) {
-    if (defaultValue.toLowerCase().indexOf('sequelize') === 0) {
-      return parse(defaultValue).program.body[0].expression;
-    }
-    return t.stringLiteral(defaultValue);
-  }
-
-  if (_.isNumber(defaultValue)) {
-    return t.numericLiteral(defaultValue);
-  }
-
-  return t.nullLiteral();
-}
-
-function processFieldProperties(field) {
-  const properties = [];
-  _.forEach(field, (value, key) => {
-    switch (key) {
-      case 'type':
-        const typeAst = parse(value).program.body[0].expression;
-        properties.push(t.objectProperty(t.identifier(key), typeAst));
-        break;
-      case 'allowNull':
-        properties.push(
-          t.objectProperty(t.identifier(key), t.booleanLiteral(Boolean(value))),
-        );
-        break;
-      case 'defaultValue':
-        properties.push(
-          t.objectProperty(t.identifier(key), getDefaultValueExpression(value)),
-        );
-        break;
-      case 'primaryKey':
-        properties.push(
-          t.objectProperty(t.identifier(key), t.booleanLiteral(Boolean(value))),
-        );
-        break;
-      case 'autoIncrement':
-        properties.push(
-          t.objectProperty(t.identifier(key), t.booleanLiteral(Boolean(value))),
-        );
-        break;
-      case 'comment':
-        properties.push(
-          t.objectProperty(
-            t.identifier(key),
-            _.isString(value) ? t.stringLiteral(value) : t.nullLiteral(),
-          ),
-        );
-        break;
-      case 'field':
-        properties.push(
-          t.objectProperty(t.identifier(key), t.stringLiteral(value)),
-        );
-        break;
-      case 'unique':
-        properties.push(
-          t.objectProperty(
-            t.identifier(key),
-            _.isString(value)
-              ? t.stringLiteral(value)
-              : t.booleanLiteral(Boolean(value)),
-          ),
-        );
-        break;
-      case 'references':
-        if (_.isPlainObject(value) && !_.isEmpty(value)) {
-          properties.push(
-            t.objectProperty(
-              t.identifier(key),
-              t.objectExpression([
-                t.objectProperty(
-                  t.identifier('key'),
-                  t.stringLiteral(value.key),
-                ),
-                t.objectProperty(
-                  t.identifier('model'),
-                  t.stringLiteral(value.model),
-                ),
-              ]),
-            ),
-          );
-        }
-        break;
-      default:
-        break;
-    }
-  });
-
-  return properties;
-}
-
-function processAttributesProperties(attributes) {
-  const properties = [];
-  _.forEach(attributes, (field, fieldName) => {
-    properties.push(
-      t.objectProperty(
-        t.identifier(fieldName),
-        t.objectExpression(processFieldProperties(field)),
-      ),
-    );
-  });
-  return properties;
-}
-
-function processOptionsProperties(nodes, definition) {
-  return nodes.map((item) => {
-    const node = item;
-    switch (node.key.name) {
-      case 'tableName':
-        node.value = t.stringLiteral(definition.tableName);
-        break;
-      case 'comment':
-        node.value = t.stringLiteral(definition.tableComment || '');
-        break;
-      case 'indexs':
-        node.value = t.arrayExpression(
-          _.map(definition.indexs, (value) => {
-            const index = t.objectExpression([
-              t.objectProperty(
-                t.identifier('name'),
-                t.stringLiteral(value.name),
-              ),
-              t.objectProperty(
-                t.identifier('unique'),
-                t.booleanLiteral(Boolean(value.unique)),
-              ),
-              t.objectProperty(
-                t.identifier('type'),
-                t.stringLiteral(value.type),
-              ),
-              t.objectProperty(
-                t.identifier('fields'),
-                t.arrayExpression(
-                  _.map(value.fields, (field) => t.stringLiteral(field)),
-                ),
-              ),
-            ]);
-            return index;
-          }),
-        );
-        break;
-      default:
-        break;
-    }
-    return node;
-  });
-}
 
 /**
  * Generate codes
@@ -174,7 +22,7 @@ function processOptionsProperties(nodes, definition) {
  */
 function generateCode(definition, options) {
   const source = fs
-    .readFileSync(join(__dirname, './template/midway.text'))
+    .readFileSync(join(__dirname, './template/midway/midway.text'))
     .toString();
 
   const ast = parse(source, {
@@ -183,6 +31,12 @@ function generateCode(definition, options) {
   });
 
   traverse(ast, {
+    ImportDeclaration: (path) => {
+      const { node } = path;
+      if (options.isAliMidway && t.isStringLiteral(node.source, { value: 'midway' })) {
+        node.source = t.stringLiteral('@ali/midway');
+      }
+    },
     VariableDeclarator: (path) => {
       const { node } = path;
       if (t.isIdentifier(node.id, { name: 'attributes' })) {
@@ -232,53 +86,10 @@ function generateCode(definition, options) {
   return code;
 }
 
-/**
- * get object type annotation
- * @param {string} type field type
- */
-function getObjectTypeAnnotation(type) {
-  if (type.indexOf('DataTypes.BOOLEAN') > -1) {
-    return t.booleanTypeAnnotation();
-  }
-  if (type.indexOf('DataTypes.INTEGER') > -1) {
-    return t.numberTypeAnnotation();
-  }
-  if (type.indexOf('DataTypes.BIGINT') > -1) {
-    return t.numberTypeAnnotation();
-  }
-  if (type.indexOf('DataTypes.STRING') > -1) {
-    return t.stringTypeAnnotation();
-  }
-  if (type.indexOf('DataTypes.CHAR') > -1) {
-    return t.stringTypeAnnotation();
-  }
-  if (type.indexOf('DataTypes.REAL') > -1) {
-    return t.numberTypeAnnotation();
-  }
-  if (type.indexOf('DataTypes.TEXT') > -1) {
-    return t.stringTypeAnnotation();
-  }
-  if (type.indexOf('DataTypes.DATE') > -1) {
-    return t.genericTypeAnnotation(t.identifier('Date'));
-  }
-  if (type.indexOf('DataTypes.FLOAT') > -1) {
-    return t.numberTypeAnnotation();
-  }
-  if (type.indexOf('DataTypes.DECIMAL') > -1) {
-    return t.numberTypeAnnotation();
-  }
-  if (type.indexOf('DataTypes.DOUBLE') > -1) {
-    return t.numberTypeAnnotation();
-  }
-  if (type.indexOf('DataTypes.UUIDV4') > -1) {
-    return t.stringTypeAnnotation();
-  }
-  return t.anyTypeAnnotation();
-}
 
 function generateDefinition(definition) {
   const source = fs
-    .readFileSync(join(__dirname, './template/midway.d.text'))
+    .readFileSync(join(__dirname, './template/midway/midway.d.text'))
     .toString();
 
   const ast = parse(source, {
@@ -340,15 +151,48 @@ function generateDefinition(definition) {
   return code;
 }
 
-function generateDB() {
-  const code = fs
-    .readFileSync(join(__dirname, './template/midway.db.text'))
+function generateDB(options) {
+  let code = fs
+    .readFileSync(join(__dirname, './template/midway/midway.db.text'))
     .toString();
+  if (options.isAliMidway) {
+    code = code.replace('midway', '@ali/midway');
+  }
   return code;
 }
 
-module.exports = {
-  generateCode,
-  generateDefinition,
-  generateDB,
-};
+function processMidway(definitions, options) {
+  const modelCodes = definitions.map((definition) => {
+    const { modelFileName } = definition;
+    const fileType = 'model';
+    const file = `${modelFileName}.ts`;
+    const code = generateCode(definition, options);
+    return {
+      file,
+      code,
+      fileType,
+    };
+  });
+
+  const definitionCodes = definitions.map((definition) => {
+    const { modelFileName } = definition;
+    const fileType = 'definition';
+    const file = `${modelFileName}.d.ts`;
+    const code = generateDefinition(definition);
+    return {
+      file,
+      code,
+      fileType,
+    };
+  });
+
+  const dbCodes = {
+    file: 'db.ts',
+    code: generateDB(options),
+    fileType: 'model',
+  };
+  const codes = _.concat([], modelCodes, definitionCodes, dbCodes);
+  return codes;
+}
+
+module.exports = processMidway;

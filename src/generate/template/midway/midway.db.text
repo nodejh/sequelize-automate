@@ -1,4 +1,4 @@
-import { async, config, init, provide, scope, ScopeEnum } from '@ali/midway';
+import { async, config, init, provide, scope, ScopeEnum } from 'midway';
 import { Sequelize } from 'sequelize';
 
 export interface IDB {

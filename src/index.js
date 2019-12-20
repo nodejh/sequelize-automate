@@ -122,7 +122,7 @@ class Automate {
     } = options || {};
     const typesDir = options.typesDir || dir;
 
-    const supportTypes = ['midway'];
+    const supportTypes = ['midway', '@ali/midway'];
     assert(_.isNull(tables) || _.isArray(tables), 'Invalid params table');
     assert(_.isNull(skipTables) || _.isArray(skipTables), 'invalid params table');
     assert(_.isBoolean(camelCase), 'Invalid params camelCase');

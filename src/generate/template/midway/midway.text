@@ -1,4 +1,4 @@
-import { IApplicationContext, providerWrapper } from '@ali/midway';
+import { IApplicationContext, providerWrapper } from 'midway';
 import { DataTypes } from 'sequelize';
 import { IDB } from './db';
 
