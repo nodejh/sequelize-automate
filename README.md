@@ -1,14 +1,35 @@
 # Sequelize-Automate
 
+[![NPM version][npm-image]][npm-url]
+[![build status][travis-image]][travis-url]
+[![Test coverage][codecov-image]][codecov-url]
+[![David deps][david-image]][david-url]
+[![Known Vulnerabilities][snyk-image]][snyk-url]
+[![npm download][download-image]][download-url]
 [![Greenkeeper badge](https://badges.greenkeeper.io/nodejh/sequelize-automate.svg)](https://greenkeeper.io/)
-
 [![Build Status](http://img.shields.io/travis/nodejh/sequelize-automate/master.svg)](https://travis-ci.org/nodejh/sequelize-automate) [![Build status](https://ci.appveyor.com/api/projects/status/bf9lb89rmpj6iveb?svg=true)](https://ci.appveyor.com/project/durango/sequelize-automate) [![Dependency Status](https://david-dm.org/nodejh/sequelize-automate.svg)](https://david-dm.org/nodejh/sequelize-automate) [![Code Climate](https://codeclimate.com/github/nodejh/sequelize-automate/badges/gpa.svg)](https://codeclimate.com/github/nodejh/sequelize-automate) [![Test Coverage](https://codeclimate.com/github/nodejh/sequelize-automate/badges/coverage.svg)](https://codeclimate.com/github/nodejh/sequelize-automate/coverage)
+
+[npm-image]: https://img.shields.io/npm/v/egg-plugin-graphql.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/egg-plugin-graphql
+[travis-image]: https://img.shields.io/travis/nodejh/egg-plugin-graphql.svg?style=flat-square
+[travis-url]: https://travis-ci.org/nodejh/egg-plugin-graphql
+[codecov-image]: https://img.shields.io/codecov/c/github/nodejh/egg-plugin-graphql.svg?style=flat-square
+[codecov-url]: https://codecov.io/github/nodejh/egg-plugin-graphql?branch=master
+[david-image]: https://img.shields.io/david/nodejh/egg-plugin-graphql.svg?style=flat-square
+[david-url]: https://david-dm.org/nodejh/egg-plugin-graphql
+[snyk-image]: https://snyk.io/test/npm/egg-plugin-graphql/badge.svg?style=flat-square
+[snyk-url]: https://snyk.io/test/npm/egg-plugin-graphql
+[download-image]: https://img.shields.io/npm/dm/egg-plugin-graphql.svg?style=flat-square
+[download-url]: https://npmjs.org/package/egg-plugin-graphql
+
 
 Automatically generate models for [SequelizeJS](https://github.com/sequelize/sequelize) via the command line.
 
 ## Install
 
-    npm install -g sequelize-automate
+```shell script
+$ npm install -g sequelize-automate
+```
 
 ## Prerequisites
 
@@ -32,7 +53,8 @@ Example for MSSQL
 
 ## Usage
 
-    [node] sequelize-automate -h <host> -d <database> -u <user> -x [password] -p [port]  --dialect [dialect] -c [/path/to/config] -o [/path/to/models] -t [tableName] -C
+```shell script
+[node] sequelize-automate -h <host> -d <database> -u <user> -x [password] -p [port]  --dialect [dialect] -c [/path/to/config] -o [/path/to/models] -t [tableName] -C
 
     Options:
       -h, --host        IP/Hostname for the database.   [required]
@@ -50,70 +72,86 @@ Example for MSSQL
       -n, --no-write    Prevent writing the models to disk.
       -s, --schema      Database schema from which to retrieve tables
       -z, --typescript  Output models as typescript with a definitions file.
+```
 
-## Example
-
-    sequelize-automate -o "./models" -d sequelize_auto_test -h localhost -u my_username -p 5432 -x my_password -e postgres
+<!-- ## Example -->
+<!-- 
+```shell script
+$ sequelize-automate -o "./models" -d sequelize_auto_test -h localhost -u my_username -p 5432 -x my_password -e postgres
+```
 
 Produces a file/files such as ./models/Users.js which looks like:
 
-    /* jshint indent: 2 */
+```javascript
+const { DataTypes } = require('sequelize');
 
-    module.exports = function(sequelize, DataTypes) {
-      return sequelize.define('Users', {
-        'id': {
-          type: DataTypes.INTEGER(11),
-          allowNull: false,
-          primaryKey: true,
-          autoIncrement: true
-        },
-        'username': {
-          type: DataTypes.STRING,
-          allowNull: true
-        },
-        'touchedAt': {
-          type: DataTypes.DATE,
-          allowNull: true
-        },
-        'aNumber': {
-          type: DataTypes.INTEGER(11),
-          allowNull: true
-        },
-        'bNumber': {
-          type: DataTypes.INTEGER(11),
-          allowNull: true
-        },
-        'validateTest': {
-          type: DataTypes.INTEGER(11),
-          allowNull: true
-        },
-        'validateCustom': {
-          type: DataTypes.STRING,
-          allowNull: false
-        },
-        'dateAllowNullTrue': {
-          type: DataTypes.DATE,
-          allowNull: true
-        },
-        'defaultValueBoolean': {
-          type: DataTypes.BOOLEAN,
-          allowNull: true,
-          defaultValue: '1'
-        },
-        'createdAt': {
-          type: DataTypes.DATE,
-          allowNull: false
-        },
-        'updatedAt': {
-          type: DataTypes.DATE,
-          allowNull: false
-        }
-      }, {
-        tableName: 'Users',
-        freezeTableName: true
-      });
-    };
+module.exports = sequelize => {
+  const attributes = {
+    id: {
+      type: Sequelize.BIGINT,
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: 'id',
+      unique: 'uk_id',
+    },
+    name: {
+      type: Sequelize.STRING(32),
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: 'user name',
+      field: 'name',
+    },
+    email: {
+      type: Sequelize.STRING(32),
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: 'user email',
+      field: 'name',
+    },
+    createdAt: {
+      type: Sequelize.DATE,
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: 'created time',
+      field: 'created_at',
+    },
+    updatedAt: {
+      type: Sequelize.DATE,
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: 'update time',
+      field: 'updated_at',
+    },
+  };
+  const options = {
+    tableName: 'user',
+    comment: 'user table',
+    indexs: [{
+      name: 'uk_name_email',
+      unique: true,
+      fields: [
+        'name',
+        'email',
+      ],
+    }]
+  };
 
+  const UserModel = sequelize.define('userModel', attributes, options);
+  return UserModel;
+};
+
+```
 
 Which makes it easy for you to simply [Sequelize.import](http://docs.sequelizejs.com/en/latest/docs/models-definition/#import) it.
 
@@ -121,67 +159,55 @@ Which makes it easy for you to simply [Sequelize.import](http://docs.sequelizejs
 
 For the `-c, --config` option the following JSON/configuration parameters are defined by Sequelize's `options` flag within the constructor. For more info:
 
-[https://sequelize.readthedocs.org/en/latest/api/sequelize/](https://sequelize.readthedocs.org/en/latest/api/sequelize/)
+[https://sequelize.readthedocs.org/en/latest/api/sequelize/](https://sequelize.readthedocs.org/en/latest/api/sequelize/) -->
 
 ## Programmatic API
 
 ```js
-var SequelizeAuto = require('sequelize-automate')
-var auto = new SequelizeAuto('database', 'user', 'pass');
+const Automate = require('sequelize-automate')
 
-auto.run(function (err) {
-  if (err) throw err;
-
-  console.log(auto.tables); // table list
-  console.log(auto.foreignKeys); // foreign key list
-});
-
-With options:
-var auto = new SequelizeAuto('database', 'user', 'pass', {
-    host: 'localhost',
-    dialect: 'mysql'|'mariadb'|'sqlite'|'postgres'|'mssql',
-    directory: false, // prevents the program from writing to disk
-    port: 'port',
-    additional: {
-        timestamps: false
-        //...
+// The database options are the same with sequelize constructor parameters
+// https://sequelize.org/master/class/lib/sequelize.js~Sequelize.html#instance-constructor-constructor
+const dbOptions = {
+  dialect: 'mysql',
+  host: '127.0.0.1',
+  port: 3306,
+  define: {
+    underscored: false,
+    freezeTableName: false,
+    charset: 'utf8mb4',
+    timezone: '+00:00',
+    dialectOptions: {
+      collate: 'utf8_general_ci',
     },
-    tables: ['table1', 'table2', 'table3']
-    //...
-})
+    timestamps: false,
+  },
+};
+
+// sequelize automate options
+const options = {
+  type: 'js', // Which code style want to generate. Supported: js/ts/egg/midway.
+  camelCase: false, // Model name camel case. Default is false.
+  modelFileNameCamelCase: true, // Model file name camel case. Default is false.
+  dir: 'models', // What directory to place the models. Default is `models`.
+  typesDir: 'models', // What directory to place the models' definitions (for typescript), default is the same with dir.
+  tables: null, // Use these tables, Example: ['user'], default is null.
+  skipTables: null, // Skip these tables. Example: ['user'], default is null.
+  tsNoCheck: false, // Whether add @ts-nocheck to model files, default is false.
+}
+
+const automate = new Automate('database', 'user', 'password', dbOptions, options);
+
+(async function main() {
+
+  // get table definitions
+  const definitions = await automate.getDefinitions();
+  console.log(definitions);
+
+  // generate codes
+  const code = await automate.run();
+  console.log(code);
+})()
 ```
 
-## Typescript
-
-Add -z to cli options or `typescript: true` to programmatic options. Model usage in a ts file:
-
-```js
-// All models, can put in or extend to a db object at server init
-import * as dbTables from './models/db.tables';
-const tables = dbTables.getModels(sequelize); //:dbTables.ITable
-tables.Device.findAll
-// Single models
-import * as dbDef from './models/db.d';
-const devices:dbDef.DeviceModel = sequelize.import('./models/Device');
-devices.findAll
-```
-
-## Testing
-
-You must setup a database called `sequelize_auto_test` first, edit the `test/config.js` file accordingly, and then enter in any of the following:
-
-    # for all
-    npm run test
-
-    # mysql only
-    npm run test-mysql
-
-    # postgres only
-    npm run test-postgres
-
-    # postgres native only
-    npm run test-postgres-native
-
-    # sqlite only
-    npm run test-sqlite
 

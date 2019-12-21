@@ -1,2 +1,1 @@
-module.exports = require('./lib');
-module.exports.automate = require('./src');
+module.exports = require('./src');
