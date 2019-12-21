@@ -1,4 +1,3 @@
-/* eslint-disable no-case-declarations */
 const _ = require('lodash');
 const { parse } = require('@babel/parser');
 const { default: generate } = require('@babel/generator');
@@ -161,7 +160,7 @@ function generateDB(options) {
   return code;
 }
 
-function processMidway(definitions, options) {
+function process(definitions, options) {
   const modelCodes = definitions.map((definition) => {
     const { modelFileName } = definition;
     const fileType = 'model';
@@ -195,4 +194,4 @@ function processMidway(definitions, options) {
   return codes;
 }
 
-module.exports = processMidway;
+module.exports = process;

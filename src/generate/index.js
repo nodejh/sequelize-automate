@@ -1,3 +1,4 @@
+const processEgg = require('./egg');
 const processMidway = require('./midway');
 
 
@@ -9,6 +10,8 @@ const processMidway = require('./midway');
 function generate(definition, options) {
   const { type, tsNoCheck } = options;
   switch (type) {
+    case 'egg':
+      return processEgg(definition);
     case 'midway':
       return processMidway(definition, { tsNoCheck });
     case '@ali/midway':
