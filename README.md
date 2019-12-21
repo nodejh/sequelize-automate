@@ -9,18 +9,18 @@
 [![Greenkeeper badge](https://badges.greenkeeper.io/nodejh/sequelize-automate.svg)](https://greenkeeper.io/)
 [![Build Status](http://img.shields.io/travis/nodejh/sequelize-automate/master.svg)](https://travis-ci.org/nodejh/sequelize-automate) [![Build status](https://ci.appveyor.com/api/projects/status/bf9lb89rmpj6iveb?svg=true)](https://ci.appveyor.com/project/durango/sequelize-automate) [![Dependency Status](https://david-dm.org/nodejh/sequelize-automate.svg)](https://david-dm.org/nodejh/sequelize-automate) [![Code Climate](https://codeclimate.com/github/nodejh/sequelize-automate/badges/gpa.svg)](https://codeclimate.com/github/nodejh/sequelize-automate) [![Test Coverage](https://codeclimate.com/github/nodejh/sequelize-automate/badges/coverage.svg)](https://codeclimate.com/github/nodejh/sequelize-automate/coverage)
 
-[npm-image]: https://img.shields.io/npm/v/egg-plugin-graphql.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/egg-plugin-graphql
-[travis-image]: https://img.shields.io/travis/nodejh/egg-plugin-graphql.svg?style=flat-square
-[travis-url]: https://travis-ci.org/nodejh/egg-plugin-graphql
-[codecov-image]: https://img.shields.io/codecov/c/github/nodejh/egg-plugin-graphql.svg?style=flat-square
-[codecov-url]: https://codecov.io/github/nodejh/egg-plugin-graphql?branch=master
-[david-image]: https://img.shields.io/david/nodejh/egg-plugin-graphql.svg?style=flat-square
-[david-url]: https://david-dm.org/nodejh/egg-plugin-graphql
-[snyk-image]: https://snyk.io/test/npm/egg-plugin-graphql/badge.svg?style=flat-square
-[snyk-url]: https://snyk.io/test/npm/egg-plugin-graphql
-[download-image]: https://img.shields.io/npm/dm/egg-plugin-graphql.svg?style=flat-square
-[download-url]: https://npmjs.org/package/egg-plugin-graphql
+[npm-image]: https://img.shields.io/npm/v/sequelize-automate.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/sequelize-automate
+[travis-image]: https://img.shields.io/travis/nodejh/sequelize-automate.svg?style=flat-square
+[travis-url]: https://travis-ci.org/nodejh/sequelize-automate
+[codecov-image]: https://img.shields.io/codecov/c/github/nodejh/sequelize-automate.svg?style=flat-square
+[codecov-url]: https://codecov.io/github/nodejh/sequelize-automate?branch=master
+[david-image]: https://img.shields.io/david/nodejh/sequelize-automate.svg?style=flat-square
+[david-url]: https://david-dm.org/nodejh/sequelize-automate
+[snyk-image]: https://snyk.io/test/npm/sequelize-automate/badge.svg?style=flat-square
+[snyk-url]: https://snyk.io/test/npm/sequelize-automate
+[download-image]: https://img.shields.io/npm/dm/sequelize-automate.svg?style=flat-square
+[download-url]: https://npmjs.org/package/sequelize-automate
 
 
 Automatically generate models for [SequelizeJS](https://github.com/sequelize/sequelize) via the command line.
