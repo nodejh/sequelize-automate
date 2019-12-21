@@ -15,10 +15,12 @@ const {
 /**
  * Generate codes
  * @param {object} definition
+ * @param {object} options
  */
-function generateCode(definition) {
+function generateCode(definition, options) {
+  const file = options.isEgg ? './template/egg/user.text' : './template/javascript/user.text';
   const source = fs
-    .readFileSync(join(__dirname, './template/egg/egg.text'))
+    .readFileSync(join(__dirname, file))
     .toString();
 
   const ast = parse(source, {

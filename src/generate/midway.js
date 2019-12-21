@@ -21,7 +21,7 @@ const {
  */
 function generateCode(definition, options) {
   const source = fs
-    .readFileSync(join(__dirname, './template/midway/midway.text'))
+    .readFileSync(join(__dirname, './template/midway/user.text'))
     .toString();
 
   const ast = parse(source, {
@@ -88,7 +88,7 @@ function generateCode(definition, options) {
 
 function generateDefinition(definition) {
   const source = fs
-    .readFileSync(join(__dirname, './template/midway/midway.d.text'))
+    .readFileSync(join(__dirname, './template/midway/user.d.text'))
     .toString();
 
   const ast = parse(source, {
@@ -152,7 +152,7 @@ function generateDefinition(definition) {
 
 function generateDB(options) {
   let code = fs
-    .readFileSync(join(__dirname, './template/midway/midway.db.text'))
+    .readFileSync(join(__dirname, './template/midway/user.db.text'))
     .toString();
   if (options.isAliMidway) {
     code = code.replace('midway', '@ali/midway');

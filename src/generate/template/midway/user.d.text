@@ -3,6 +3,8 @@ import { Model, BuildOptions } from 'sequelize';
 export interface IUserAttributes {
   id: number;
   name: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface IUserModel extends IUserAttributes, Model {
