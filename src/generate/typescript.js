@@ -21,7 +21,7 @@ const {
  */
 function generateCode(definition, options) {
   const source = fs
-    .readFileSync(join(__dirname, './template/midway/user.text'))
+    .readFileSync(join(__dirname, './template/typescript/user.text'))
     .toString();
 
   const ast = parse(source, {
@@ -30,12 +30,6 @@ function generateCode(definition, options) {
   });
 
   traverse(ast, {
-    ImportDeclaration: (path) => {
-      const { node } = path;
-      if (options.isAliMidway && t.isStringLiteral(node.source, { value: 'midway' })) {
-        node.source = t.stringLiteral('@ali/midway');
-      }
-    },
     VariableDeclarator: (path) => {
       const { node } = path;
       if (t.isIdentifier(node.id, { name: 'attributes' })) {
@@ -60,19 +54,12 @@ function generateCode(definition, options) {
       ) {
         node.arguments[0] = t.stringLiteral(definition.modelName);
       }
-      if (t.isIdentifier(node.callee, { name: 'providerWrapper' })) {
-        traverse(
-          node,
-          {
-            ObjectProperty: (path1) => {
-              const { node: node1 } = path1;
-              if (t.isIdentifier(node1.key, { name: 'id' })) {
-                node1.value = t.stringLiteral(bigCamelCase(definition.modelName));
-              }
-            },
-          },
-          { path },
-        );
+    },
+
+    ReturnStatement: (path) => {
+      const { node } = path;
+      if (t.isIdentifier(node.argument, { name: 'UserModel' })) {
+        node.argument = t.identifier(bigCamelCase(definition.modelName));
       }
     },
   });
@@ -88,7 +75,7 @@ function generateCode(definition, options) {
 
 function generateDefinition(definition) {
   const source = fs
-    .readFileSync(join(__dirname, './template/midway/user.d.text'))
+    .readFileSync(join(__dirname, './template/typescript/user.d.text'))
     .toString();
 
   const ast = parse(source, {
@@ -150,16 +137,6 @@ function generateDefinition(definition) {
   return code;
 }
 
-function generateDB(options) {
-  let code = fs
-    .readFileSync(join(__dirname, './template/midway/user.db.text'))
-    .toString();
-  if (options.isAliMidway) {
-    code = code.replace('midway', '@ali/midway');
-  }
-  return code;
-}
-
 function process(definitions, options) {
   const modelCodes = definitions.map((definition) => {
     const { modelFileName } = definition;
@@ -185,12 +162,7 @@ function process(definitions, options) {
     };
   });
 
-  const dbCodes = {
-    file: 'db.ts',
-    code: generateDB(options),
-    fileType: 'model',
-  };
-  const codes = _.concat([], modelCodes, definitionCodes, dbCodes);
+  const codes = _.concat([], modelCodes, definitionCodes);
   return codes;
 }
 
