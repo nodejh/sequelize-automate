@@ -6,8 +6,8 @@
 [![David deps][david-image]][david-url]
 [![Known Vulnerabilities][snyk-image]][snyk-url]
 [![npm download][download-image]][download-url]
-[![Greenkeeper badge](https://badges.greenkeeper.io/nodejh/sequelize-automate.svg)](https://greenkeeper.io/)
-[![Build Status](http://img.shields.io/travis/nodejh/sequelize-automate/master.svg)](https://travis-ci.org/nodejh/sequelize-automate)
+<!-- [![Greenkeeper badge](https://badges.greenkeeper.io/nodejh/sequelize-automate.svg)](https://greenkeeper.io/) -->
+<!-- [![Build Status](http://img.shields.io/travis/nodejh/sequelize-automate/master.svg)](https://travis-ci.org/nodejh/sequelize-automate) -->
 [![Dependency Status](https://david-dm.org/nodejh/sequelize-automate.svg)](https://david-dm.org/nodejh/sequelize-automate)
 
 
@@ -277,7 +277,7 @@ You can generate different (node.js framework's) codes use `type` option.
 $ sequelize-automate -t js
 ```
 
-[example][https://github.com/nodejh/sequelize-automate/tree/master/src/generate/template/javascript]
+[example](https://github.com/nodejh/sequelize-automate/tree/master/src/generate/template/javascript)
 
 ### TypeScript
 
@@ -285,7 +285,7 @@ $ sequelize-automate -t js
 $ sequelize-automate -t ts
 ```
 
-[example][https://github.com/nodejh/sequelize-automate/tree/master/src/generate/template/typescript]
+[example](https://github.com/nodejh/sequelize-automate/tree/master/src/generate/template/typescript)
 
 ### Egg.js
 
@@ -293,7 +293,7 @@ $ sequelize-automate -t ts
 $ sequelize-automate -t egg
 ```
 
-[example][https://github.com/nodejh/sequelize-automate/tree/master/src/generate/template/egg]
+[example](https://github.com/nodejh/sequelize-automate/tree/master/src/generate/template/egg)
 
 
 ### Midway.js
@@ -302,6 +302,6 @@ $ sequelize-automate -t egg
 $ sequelize-automate -t midway
 ```
 
-[example][https://github.com/nodejh/sequelize-automate/tree/master/src/generate/template/midway]
+[example](https://github.com/nodejh/sequelize-automate/tree/master/src/generate/template/midway)
 
 If you want to generate codes for other frameworks, please let me know.
