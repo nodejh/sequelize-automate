@@ -30,25 +30,30 @@ const { argv } = yargs
   .option('host', {
     alias: 'h',
     describe: 'IP/Hostname for the database.',
+    type: 'string',
     default: 'localhost',
   })
   .option('database', {
     alias: 'd',
     describe: 'Database name.',
+    type: 'string',
     default: 'test',
   })
   .option('user', {
     alias: 'u',
     describe: 'Username for database.',
+    type: 'string',
     default: 'root',
   })
   .option('password', {
     alias: 'p',
     describe: 'Password for database.',
+    type: 'string',
     default: 'root',
   })
   .option('port', {
     describe: 'Port number for database. It is not for sqlite. ex) MySQL/MariaDB: 3306, Postgres: 5432, MSSQL: 1433',
+    type: 'number',
     default: 3306,
   })
   .option('dialect', {
@@ -60,6 +65,7 @@ const { argv } = yargs
   .option('output', {
     alias: 'o',
     describe: 'What directory to place the models.',
+    type: 'string',
     default: 'models',
   })
   .option('camel', {
@@ -71,6 +77,7 @@ const { argv } = yargs
   .option('config', {
     alias: 'c',
     describe: 'Sequelize automate config file, see README.md',
+    type: 'string',
   })
   .option('emptyDir', {
     alias: 'r',

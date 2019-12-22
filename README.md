@@ -27,151 +27,60 @@
 [download-url]: https://npmjs.org/package/sequelize-automate
 
 
-Automatically generate models for [SequelizeJS](https://github.com/sequelize/sequelize) via the command line.
+Automatically generate models for [SequelizeJS](https://github.com/sequelize/sequelize). Support javascript, typescript, egg.js and midway.
 
 ## Install
+
+global:
 
 ```shell script
 $ npm install -g sequelize-automate
 ```
 
-## Prerequisites
+in poroject:
 
-You will need to install the correct dialect binding globally before using sequelize-automate.
+```shell script
+$ npm install sequelize-automate
+```
 
-Example for MySQL/MariaDB
-
-`npm install -g mysql`
-
-Example for Postgres
-
-`npm install -g pg pg-hstore`
-
-Example for Sqlite3
-
-`npm install -g sqlite`
-
-Example for MSSQL
-
-`npm install -g mssql`
 
 ## Usage
 
-```shell script
-[node] sequelize-automate -h <host> -d <database> -u <user> -x [password] -p [port]  --dialect [dialect] -c [/path/to/config] -o [/path/to/models] -t [tableName] -C
+### Command Line
 
-    Options:
-      -h, --host        IP/Hostname for the database.   [required]
-      -d, --database    Database name.                  [required]
-      -u, --user        Username for database.
-      -x, --pass        Password for database.
-      -p, --port        Port number for database.
-      -c, --config      JSON file for Sequelize's constructor "options" flag object as defined here: https://sequelize.readthedocs.org/en/latest/api/sequelize/
-      -o, --output      What directory to place the models.
-      -e, --dialect     The dialect/engine that you're using: postgres, mysql, sqlite
-      -a, --additional  Path to a json file containing model definitions (for all tables) which are to be defined within a model's configuration parameter. For more info: https://sequelize.readthedocs.org/en/latest/docs/models-definition/#configuration
-      -t, --tables      Comma-separated names of tables to import
-      -T, --skip-tables Comma-separated names of tables to skip
-      -C, --camel       Use camel case to name models and fields
-      -n, --no-write    Prevent writing the models to disk.
-      -s, --schema      Database schema from which to retrieve tables
-      -z, --typescript  Output models as typescript with a definitions file.
+```shell script
+Usage: sequelize-automate -t [type] -h <host> -d <database> -u <user> -x [password] -p [port]  --dialect [dialect] -o [/path/to/models] -c
+[/path/to/config]
+
+Options:
+  --version       Show version number                                  [boolean]
+  --type, -t      Which code style want to generate.
+                [required] [choices: "js", "ts", "egg", "midway", "@ali/midway"]
+  --host, -h      IP/Hostname for the database.           [default: "localhost"]
+  --database, -d  Database name.                               [default: "test"]
+  --user, -u      Username for database.                       [default: "root"]
+  --password, -p  Password for database.                       [default: "root"]
+  --port          Port number for database. It is not for sqlite. ex)
+                  MySQL/MariaDB: 3306, Postgres: 5432, MSSQL: 1433
+                                                                 [default: 3306]
+  --dialect, -e   The dialect/engine that you're using: mysql, sqlite, postgres,
+                  mssql
+            [choices: "mysql", "sqlite", "postgres", "mssql"] [default: "mysql"]
+  --output, -o    What directory to place the models.        [default: "models"]
+  --camel, -C     Use camel case to name models       [boolean] [default: false]
+  --config, -c    Sequelize automate config file, see README.md
+  --emptyDir, -r  Remove all files in `dir` and `typesDir` directories before
+                  generate models.                    [boolean] [default: false]
+  --help          Show help                                            [boolean]
 ```
 
-<!-- ## Example -->
-<!--
-```shell script
-$ sequelize-automate -o "./models" -d sequelize_auto_test -h localhost -u my_username -p 5432 -x my_password -e postgres
-```
 
-Produces a file/files such as ./models/Users.js which looks like:
+### Programmatic API
 
 ```javascript
-const { DataTypes } = require('sequelize');
+const Automate = require('sequelize-automate');
 
-module.exports = sequelize => {
-  const attributes = {
-    id: {
-      type: Sequelize.BIGINT,
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: 'id',
-      unique: 'uk_id',
-    },
-    name: {
-      type: Sequelize.STRING(32),
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: 'user name',
-      field: 'name',
-    },
-    email: {
-      type: Sequelize.STRING(32),
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: 'user email',
-      field: 'name',
-    },
-    createdAt: {
-      type: Sequelize.DATE,
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: 'created time',
-      field: 'created_at',
-    },
-    updatedAt: {
-      type: Sequelize.DATE,
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: 'update time',
-      field: 'updated_at',
-    },
-  };
-  const options = {
-    tableName: 'user',
-    comment: 'user table',
-    indexs: [{
-      name: 'uk_name_email',
-      unique: true,
-      fields: [
-        'name',
-        'email',
-      ],
-    }]
-  };
-
-  const UserModel = sequelize.define('userModel', attributes, options);
-  return UserModel;
-};
-
-```
-
-Which makes it easy for you to simply [Sequelize.import](http://docs.sequelizejs.com/en/latest/docs/models-definition/#import) it.
-
-## Configuration options
-
-For the `-c, --config` option the following JSON/configuration parameters are defined by Sequelize's `options` flag within the constructor. For more info:
-
-[https://sequelize.readthedocs.org/en/latest/api/sequelize/](https://sequelize.readthedocs.org/en/latest/api/sequelize/) -->
-
-## Programmatic API
-
-```js
-const Automate = require('sequelize-automate')
-
-// The database options are the same with sequelize constructor options.
-// https://sequelize.org/master/class/lib/sequelize.js~Sequelize.html#instance-constructor-constructor
+// Database options, is the same with sequelize constructor options. [https://sequelize.org/master/class/lib/sequelize.js~Sequelize.html#instance-constructor-constructor](https://sequelize.org/master/class/lib/sequelize.js~Sequelize.html#instance-constructor-constructor)
 const dbOptions = {
   database: 'test',
   username: 'root',
@@ -190,8 +99,6 @@ const dbOptions = {
     timestamps: false,
   },
 };
-
-// sequelize automate options
 const options = {
   type: 'js', // Which code style want to generate, supported: js/ts/egg/midway. Default is `js`.
   camelCase: false, // Model name camel case. Default is false.
@@ -203,7 +110,7 @@ const options = {
   tsNoCheck: false, // Whether add @ts-nocheck to model files, default is false.
 }
 
-const automate = new Automate('database', 'user', 'password', dbOptions, options);
+const automate = new Automate(dbOptions, options);
 
 (async function main() {
 
@@ -217,4 +124,184 @@ const automate = new Automate('database', 'user', 'password', dbOptions, options
 })()
 ```
 
+- `automate.getDefinitions()`: Get all model definitions. `sequelize-automate` will use these definitions to generate different codes.
+- `automate.run()`: Generate model codes.
 
+
+## Example
+
+### Command Line
+
+```shell script
+$ sequelize-automate -t js -h localhost -d test -u root -p root  -e mysql  -o models
+```
+
+Produces a file/files such as ./models/user.js which looks like:
+
+```javascript
+const {
+  DataTypes
+} = require('sequelize');
+
+module.exports = sequelize => {
+  const attributes = {
+    id: {
+      type: DataTypes.INTEGER(11).UNSIGNED,
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: true,
+      autoIncrement: true,
+      comment: "primary ket",
+      field: "id"
+    },
+    name: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: "user name",
+      field: "name",
+      unique: "uk_name"
+    },
+    email: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: "user email",
+      field: "email"
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: "created datetime",
+      field: "created_at"
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: "updated datetime",
+      field: "updated_at"
+    }
+  };
+  const options = {
+    tableName: "user",
+    comment: "",
+    indexs: []
+  };
+  const UserModel = sequelize.define("userModel", attributes, options);
+  return UserModel;
+};
+```
+
+Which makes it easy for you to simply [Sequelize.import](https://sequelize.org/master/manual/models-definition.html#import) it.
+
+### Configuration options
+
+You can use `-c, --config` option to specify a configuration file.
+
+```shell script
+$ sequelize-automate -c "./sequelize-automate.config.json"
+```
+
+For now, you must create a file called `sequelize-automate.config.json` with the following content:
+
+```json
+{
+  "dbOptions": {
+    "database": "test",
+    "username": "root",
+    "password": "root",
+    "dialect": "mysql",
+    "host": "localhost",
+    "port": 3306,
+    "logging": false
+  },
+  "options": {
+    "type": "js",
+    "dir": "models"
+  }
+}
+```
+
+Or a `.js` file: `sequelize-automate -c "./sequelize-automate.config.js"`
+
+```javascript
+module.exports = {
+  dbOptions: {
+    database: "test",
+    username: "root",
+    password: "root",
+    dialect: "mysql",
+    host: "localhost",
+    port: 3306,
+    logging: false
+  },
+  options: {
+    type: "js",
+    dir: "models"
+ }
+}
+```
+
+### In project
+
+Also, you can use `sequelize-automate` in project.
+
+First add a configuration file `sequelize-automate.config.json` as above and add `automate` script to `package.json`:
+
+```json
+"script": {
+  // ...
+  "automate": "sequelize-automate -c sequelize-automate.config.json"
+}
+```
+
+Then you can use `npm run automate` to generate models.
+
+## Type
+
+You can generate different (node.js framework's) codes use `type` option.
+
+### JavaScript
+
+```shell script
+$ sequelize-automate -t js
+```
+
+[example][https://github.com/nodejh/sequelize-automate/tree/master/src/generate/template/javascript]
+
+### TypeScript
+
+```shell script
+$ sequelize-automate -t ts
+```
+
+[example][https://github.com/nodejh/sequelize-automate/tree/master/src/generate/template/typescript]
+
+### Egg.js
+
+```shell script
+$ sequelize-automate -t egg
+```
+
+[example][https://github.com/nodejh/sequelize-automate/tree/master/src/generate/template/egg]
+
+
+### Midway.js
+
+```shell script
+$ sequelize-automate -t midway
+```
+
+[example][https://github.com/nodejh/sequelize-automate/tree/master/src/generate/template/midway]
+
+If you want to generate codes for other frameworks, please let me know.
