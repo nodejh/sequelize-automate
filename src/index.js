@@ -9,9 +9,36 @@ const { write } = require('./util/write');
 class Automate {
   constructor(dbOptions, options) {
     debug('sequelize-automate constructor');
+    const defaultOptions = {
+      type: 'js',
+      tables: null,
+      skipTables: null,
+      camelCase: false,
+      fileNameCamelCase: false,
+      dir: './models',
+      typesDir: './models',
+      cleanDir: false,
+      tsNoCheck: false,
+    };
+
     // https://sequelize.org/master/class/lib/sequelize.js~Sequelize.html#instance-constructor-constructor
     this.dbOptions = dbOptions || {};
-    this.options = options || {};
+    this.options = _.assign({}, defaultOptions, options);
+
+    // default `options.typesDir` is the same with `options.dir`
+    this.options.typesDir = this.options.typesDir || this.options.dir;
+
+    const supportTypes = ['js', 'ts', 'egg', 'midway', '@ali/midway'];
+    assert(supportTypes.includes(this.options.type), 'type not support');
+    assert(_.isNull(this.options.tables) || _.isArray(this.options.tables), 'Invalid params table');
+    assert(_.isNull(this.options.skipTables) || _.isArray(this.options.skipTables), 'invalid params table');
+    assert(_.isBoolean(this.options.camelCase), 'Invalid params camelCase');
+    assert(_.isBoolean(this.options.fileNameCamelCase), 'Invalid params fileNameCamelCase');
+    assert(_.isString(this.options.dir), 'Invalid params dir');
+    assert(_.isString(this.options.typesDir), 'Invalid params typesDir');
+    assert(_.isBoolean(this.options.cleanDir), 'Invalid params cleanDir');
+    assert(_.isBoolean(this.options.tsNoCheck), 'Invalid params tsNoCheck');
+
     this.sequelize = new Sequelize(this.dbOptions);
     this.queryInterface = this.sequelize.getQueryInterface();
   }
@@ -79,7 +106,7 @@ class Automate {
       tables,
       skipTables,
       camelCase,
-      modelFileNameCamelCase,
+      fileNameCamelCase,
     } = this.options;
     const allTables = await this.getTables({
       tables,
@@ -87,7 +114,7 @@ class Automate {
     });
     const definitions = getModelDefinitions(allTables, {
       camelCase,
-      modelFileNameCamelCase,
+      fileNameCamelCase,
       dialect: this.options.dialect,
     });
     debug('get model definitions');
@@ -97,31 +124,20 @@ class Automate {
 
   async run() {
     const {
-      tables = null,
-      skipTables = null,
-      camelCase = false,
-      modelFileNameCamelCase = false,
-      dir = './models',
-      reset = false,
-      type = 'js',
-      tsNoCheck = false, // @ts-nocheck
+      type,
+      tables,
+      skipTables,
+      camelCase,
+      fileNameCamelCase,
+      tsNoCheck,
+      dir,
+      typesDir,
     } = this.options;
-    const typesDir = this.options.typesDir || dir;
-
-    const supportTypes = ['js', 'ts', 'egg', 'midway', '@ali/midway'];
-    assert(_.isNull(tables) || _.isArray(tables), 'Invalid params table');
-    assert(_.isNull(skipTables) || _.isArray(skipTables), 'invalid params table');
-    assert(_.isBoolean(camelCase), 'Invalid params camelCase');
-    assert(_.isBoolean(modelFileNameCamelCase), 'Invalid params modelFileNameCamelCase');
-    assert(_.isString(dir), 'Invalid params dir');
-    assert(_.isBoolean(reset), 'Invalid params reset');
-    assert(supportTypes.includes(type), 'type not support');
-
     const definitions = await this.getDefinitions({
       tables,
       skipTables,
       camelCase,
-      modelFileNameCamelCase,
+      fileNameCamelCase,
     });
 
     const codes = generate(definitions, {
