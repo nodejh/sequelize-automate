@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 
+/* eslint-disable no-console */
 const path = require('path');
+const fs = require('fs');
 const yargs = require('yargs');
+const _ = require('lodash');
 const Automate = require('..');
 
 function getDefaultPort(dialect) {
@@ -52,29 +55,38 @@ const { argv } = yargs
   // .describe('z', 'Output models as typescript with a definitions file')
   // .describe('f', 'Use camel case for file name');
 
-// TODO: config file
+let configFile = null;
 
-const dbOptions = {
-  dialect: argv.e || 'mysql',
-  host: argv.h || '127.0.0.1',
-  port: argv.p || getDefaultPort(),
-};
+if (argv.c) {
+  const filePath = path.resolve(argv.c);
+  if (fs.existsSync(filePath)) {
+    // eslint-disable-next-line global-require,import/no-dynamic-require
+    configFile = require(filePath);
+  }
+}
 
-const options = {
+const dbOptions = _.assign({}, {
+  database: argv.d,
+  username: argv.d,
+  password: argv.x,
+  options: {
+    dialect: argv.e || 'mysql',
+    host: argv.h || '127.0.0.1',
+    port: argv.p || getDefaultPort(),
+  },
+}, configFile ? configFile.dbOptions : {});
+
+const options = _.assign({}, {
   type: argv.t || 'js',
   camelCase: !!argv.C,
   dir: argv.o || path.resolve(`${process.cwd()}/models`),
-};
+}, configFile ? configFile.options : {});
 
 
-const automate = new Automate(argv.d, argv.u, argv.x, dbOptions, options);
+const automate = new Automate(dbOptions, options);
 
-automate.then((code) => {
-  // eslint-disable-next-line
-  console.log(code);
-  // eslint-disable-next-line
+automate.run().then(() => {
   console.log('Done!');
 }).catch((e) => {
-  // eslint-disable-next-line
   console.log(e);
 });

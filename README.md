@@ -7,7 +7,11 @@
 [![Known Vulnerabilities][snyk-image]][snyk-url]
 [![npm download][download-image]][download-url]
 [![Greenkeeper badge](https://badges.greenkeeper.io/nodejh/sequelize-automate.svg)](https://greenkeeper.io/)
-[![Build Status](http://img.shields.io/travis/nodejh/sequelize-automate/master.svg)](https://travis-ci.org/nodejh/sequelize-automate) [![Build status](https://ci.appveyor.com/api/projects/status/bf9lb89rmpj6iveb?svg=true)](https://ci.appveyor.com/project/durango/sequelize-automate) [![Dependency Status](https://david-dm.org/nodejh/sequelize-automate.svg)](https://david-dm.org/nodejh/sequelize-automate) [![Code Climate](https://codeclimate.com/github/nodejh/sequelize-automate/badges/gpa.svg)](https://codeclimate.com/github/nodejh/sequelize-automate) [![Test Coverage](https://codeclimate.com/github/nodejh/sequelize-automate/badges/coverage.svg)](https://codeclimate.com/github/nodejh/sequelize-automate/coverage)
+[![Build Status](http://img.shields.io/travis/nodejh/sequelize-automate/master.svg)](https://travis-ci.org/nodejh/sequelize-automate)
+[![Dependency Status](https://david-dm.org/nodejh/sequelize-automate.svg)](https://david-dm.org/nodejh/sequelize-automate)
+
+
+<!-- [![Test Coverage](https://codeclimate.com/github/nodejh/sequelize-automate/badges/coverage.svg)](https://codeclimate.com/github/nodejh/sequelize-automate/coverage) -->
 
 [npm-image]: https://img.shields.io/npm/v/sequelize-automate.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/sequelize-automate
@@ -75,7 +79,7 @@ Example for MSSQL
 ```
 
 <!-- ## Example -->
-<!-- 
+<!--
 ```shell script
 $ sequelize-automate -o "./models" -d sequelize_auto_test -h localhost -u my_username -p 5432 -x my_password -e postgres
 ```
@@ -166,9 +170,12 @@ For the `-c, --config` option the following JSON/configuration parameters are de
 ```js
 const Automate = require('sequelize-automate')
 
-// The database options are the same with sequelize constructor parameters
+// The database options are the same with sequelize constructor options.
 // https://sequelize.org/master/class/lib/sequelize.js~Sequelize.html#instance-constructor-constructor
 const dbOptions = {
+  database: 'test',
+  username: 'root',
+  password: 'root',
   dialect: 'mysql',
   host: '127.0.0.1',
   port: 3306,
@@ -186,7 +193,7 @@ const dbOptions = {
 
 // sequelize automate options
 const options = {
-  type: 'js', // Which code style want to generate. Supported: js/ts/egg/midway.
+  type: 'js', // Which code style want to generate, supported: js/ts/egg/midway. Default is `js`.
   camelCase: false, // Model name camel case. Default is false.
   modelFileNameCamelCase: true, // Model file name camel case. Default is false.
   dir: 'models', // What directory to place the models. Default is `models`.

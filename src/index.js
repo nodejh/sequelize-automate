@@ -7,12 +7,12 @@ const generate = require('./generate');
 const { write } = require('./util/write');
 
 class Automate {
-  constructor(database, username, password, dbOptions, options) {
+  constructor(dbOptions, options) {
     debug('sequelize-automate constructor');
     // https://sequelize.org/master/class/lib/sequelize.js~Sequelize.html#instance-constructor-constructor
     this.dbOptions = dbOptions || {};
     this.options = options || {};
-    this.sequelize = new Sequelize(database, username, password, this.dbOptions);
+    this.sequelize = new Sequelize(this.dbOptions);
     this.queryInterface = this.sequelize.getQueryInterface();
   }
 

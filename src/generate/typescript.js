@@ -44,6 +44,10 @@ function generateCode(definition, options) {
         );
         node.init = t.objectExpression(properties);
       }
+
+      if (t.isIdentifier(node.id, { name: 'UserModel' })) {
+        node.id = t.identifier(bigCamelCase(definition.modelName));
+      }
     },
 
     CallExpression: (path) => {

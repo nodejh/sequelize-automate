@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="SmartFoxWorkToolsProjectState">
-    <option name="branch" value="master" />
-    <option name="gitUrl" value="https://github.com/nodejh/sequelize-automate.git" />
-    <option name="localBranch" value="master" />
-    <option name="revision" value="a7cd76238c0c843dd7e9eafd8b84dde53483e756" />
-  </component>
-</project>

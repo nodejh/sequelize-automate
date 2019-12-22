@@ -6,7 +6,7 @@ export default async function setupModel(context: IApplicationContext) {
   const db: IDB = await context.getAsync('DB');
   const attributes = {
     id: {
-      type: Sequelize.BIGINT,
+      type: DataTypes.BIGINT,
       allowNull: false,
       defaultValue: null,
       primaryKey: false,
@@ -16,7 +16,7 @@ export default async function setupModel(context: IApplicationContext) {
       unique: 'uk_id',
     },
     name: {
-      type: Sequelize.STRING(32),
+      type: DataTypes.STRING(32),
       allowNull: false,
       defaultValue: null,
       primaryKey: false,
@@ -25,7 +25,7 @@ export default async function setupModel(context: IApplicationContext) {
       field: 'name',
     },
     email: {
-      type: Sequelize.STRING(32),
+      type: DataTypes.STRING(32),
       allowNull: false,
       defaultValue: null,
       primaryKey: false,
@@ -34,7 +34,7 @@ export default async function setupModel(context: IApplicationContext) {
       field: 'name',
     },
     createdAt: {
-      type: Sequelize.DATE,
+      type: DataTypes.DATE,
       allowNull: false,
       defaultValue: null,
       primaryKey: false,
@@ -43,7 +43,7 @@ export default async function setupModel(context: IApplicationContext) {
       field: 'created_at',
     },
     updatedAt: {
-      type: Sequelize.DATE,
+      type: DataTypes.DATE,
       allowNull: false,
       defaultValue: null,
       primaryKey: false,

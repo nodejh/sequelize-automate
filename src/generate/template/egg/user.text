@@ -4,7 +4,7 @@ module.exports = app => {
   const DataTypes = app.Sequelize;
   const attributes = {
     id: {
-      type: Sequelize.BIGINT,
+      type: DataTypes.BIGINT,
       allowNull: false,
       defaultValue: null,
       primaryKey: false,
@@ -14,7 +14,7 @@ module.exports = app => {
       unique: 'uk_id',
     },
     name: {
-      type: Sequelize.STRING(32),
+      type: DataTypes.STRING(32),
       allowNull: false,
       defaultValue: null,
       primaryKey: false,
@@ -23,7 +23,7 @@ module.exports = app => {
       field: 'name',
     },
     email: {
-      type: Sequelize.STRING(32),
+      type: DataTypes.STRING(32),
       allowNull: false,
       defaultValue: null,
       primaryKey: false,
@@ -32,7 +32,7 @@ module.exports = app => {
       field: 'name',
     },
     createdAt: {
-      type: Sequelize.DATE,
+      type: DataTypes.DATE,
       allowNull: false,
       defaultValue: null,
       primaryKey: false,
@@ -41,7 +41,7 @@ module.exports = app => {
       field: 'created_at',
     },
     updatedAt: {
-      type: Sequelize.DATE,
+      type: DataTypes.DATE,
       allowNull: false,
       defaultValue: null,
       primaryKey: false,
