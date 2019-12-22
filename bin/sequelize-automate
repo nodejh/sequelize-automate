@@ -25,7 +25,6 @@ const { argv } = yargs
     alias: 't',
     describe: 'Which code style want to generate.',
     choices: ['js', 'ts', 'egg', 'midway', '@ali/midway'],
-    demand: true,
   })
   .option('host', {
     alias: 'h',
@@ -84,8 +83,7 @@ const { argv } = yargs
     type: 'boolean',
     default: false,
     describe: 'Remove all files in `dir` and `typesDir` directories before generate models.',
-  })
-  .help();
+  });
 
 let configFile = null;
 
