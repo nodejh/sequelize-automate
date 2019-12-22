@@ -17,6 +17,10 @@ async function writeFile(code, dir, fileName) {
   * @param {object} options { dir, typesDir }
  */
 async function write(codes, options) {
+  if (options.emptyDir) {
+    fs.emptyDirSync(options.dir);
+    fs.emptyDirSync(options.typesDir);
+  }
   const list = codes.map((code) => {
     const dir = code.fileType === 'model' ? options.dir : options.typesDir;
     return writeFile(code.code, dir, code.file);

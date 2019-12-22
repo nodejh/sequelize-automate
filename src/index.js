@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const assert = require('assert');
 const _ = require('lodash');
 const Sequelize = require('sequelize');
@@ -10,15 +11,15 @@ class Automate {
   constructor(dbOptions, options) {
     debug('sequelize-automate constructor');
     const defaultOptions = {
-      type: 'js',
-      tables: null,
-      skipTables: null,
-      camelCase: false,
-      fileNameCamelCase: false,
-      dir: './models',
-      typesDir: './models',
-      cleanDir: false,
-      tsNoCheck: false,
+      type: 'js', // Which code style want to generate, supported: js/ts/egg/midway. Default is `js`.
+      camelCase: false, // Model name camel case. Default is false.
+      fileNameCamelCase: false, // Model file name camel case. Default is false.
+      dir: 'models', // What directory to place the models. Default is `models`.
+      typesDir: null, // What directory to place the models' definitions (for typescript), default is the same with dir.
+      emptyDir: false, // Remove all files in `dir` and `typesDir` directories before generate models.
+      tables: null, // Use these tables, Example: ['user'], default is null.
+      skipTables: null, // Skip these tables. Example: ['user'], default is null.
+      tsNoCheck: false, // Whether add `@ts-nocheck` to model files, default is false.
     };
 
     // https://sequelize.org/master/class/lib/sequelize.js~Sequelize.html#instance-constructor-constructor
@@ -30,13 +31,13 @@ class Automate {
 
     const supportTypes = ['js', 'ts', 'egg', 'midway', '@ali/midway'];
     assert(supportTypes.includes(this.options.type), 'type not support');
-    assert(_.isNull(this.options.tables) || _.isArray(this.options.tables), 'Invalid params table');
-    assert(_.isNull(this.options.skipTables) || _.isArray(this.options.skipTables), 'invalid params table');
     assert(_.isBoolean(this.options.camelCase), 'Invalid params camelCase');
     assert(_.isBoolean(this.options.fileNameCamelCase), 'Invalid params fileNameCamelCase');
     assert(_.isString(this.options.dir), 'Invalid params dir');
     assert(_.isString(this.options.typesDir), 'Invalid params typesDir');
-    assert(_.isBoolean(this.options.cleanDir), 'Invalid params cleanDir');
+    assert(_.isBoolean(this.options.emptyDir), 'Invalid params cleanDir');
+    assert(_.isNull(this.options.tables) || _.isArray(this.options.tables), 'Invalid params table');
+    assert(_.isNull(this.options.skipTables) || _.isArray(this.options.skipTables), 'invalid params table');
     assert(_.isBoolean(this.options.tsNoCheck), 'Invalid params tsNoCheck');
 
     this.sequelize = new Sequelize(this.dbOptions);
@@ -132,6 +133,7 @@ class Automate {
       tsNoCheck,
       dir,
       typesDir,
+      emptyDir,
     } = this.options;
     const definitions = await this.getDefinitions({
       tables,
@@ -145,7 +147,7 @@ class Automate {
       tsNoCheck,
     });
     if (dir) {
-      await write(codes, { dir, typesDir });
+      await write(codes, { dir, typesDir, emptyDir });
     }
     return codes;
   }

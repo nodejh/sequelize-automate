@@ -1,0 +1,16 @@
+{
+  "dbOptions": {
+    "database": "test",
+    "username": "root",
+    "password": "root",
+    "dialect": "mysql",
+    "host": "localhost",
+    "port": 3306,
+    "logging": false
+  },
+  "options": {
+    "type": "js",
+    "dir": ".tmp",
+    "emptyDir": true
+  }
+}

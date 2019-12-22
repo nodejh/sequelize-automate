@@ -5,7 +5,8 @@ function getFieldName(fieldName, camelCase) {
 }
 
 function getModelName(tableName, camelCase) {
-  return `${getFieldName(tableName, camelCase)}Model`;
+  const modelString = camelCase ? 'Model' : '_model';
+  return `${getFieldName(tableName, camelCase)}${modelString}`;
 }
 
 /**
