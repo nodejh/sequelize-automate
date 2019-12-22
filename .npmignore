@@ -9,3 +9,5 @@ database.sqlite
 .nyc_output
 coverage/
 coverage-*/
+.idea
+.tmp
