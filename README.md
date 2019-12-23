@@ -99,12 +99,15 @@ const dbOptions = {
     timestamps: false,
   },
 };
+
+// automate options
 const options = {
   type: 'js', // Which code style want to generate, supported: js/ts/egg/midway. Default is `js`.
   camelCase: false, // Model name camel case. Default is false.
   fileNameCamelCase: true, // Model file name camel case. Default is false.
   dir: 'models', // What directory to place the models. Default is `models`.
   typesDir: 'models', // What directory to place the models' definitions (for typescript), default is the same with dir.
+  emptyDir: false, // Remove all files in `dir` and `typesDir` directories before generate models.
   tables: null, // Use these tables, Example: ['user'], default is null.
   skipTables: null, // Skip these tables. Example: ['user'], default is null.
   tsNoCheck: false, // Whether add @ts-nocheck to model files, default is false.
@@ -305,3 +308,7 @@ $ sequelize-automate -t midway
 [example](https://github.com/nodejh/sequelize-automate/tree/master/src/generate/template/midway)
 
 If you want to generate codes for other frameworks, please let me know.
+
+## LICENSE
+
+[MIT](https://github.com/nodejh/sequelize-automate/blob/master/LICENSE).
