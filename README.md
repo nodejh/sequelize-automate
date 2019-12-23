@@ -80,7 +80,7 @@ Options:
 ```javascript
 const Automate = require('sequelize-automate');
 
-// Database options, is the same with sequelize constructor options. [https://sequelize.org/master/class/lib/sequelize.js~Sequelize.html#instance-constructor-constructor](https://sequelize.org/master/class/lib/sequelize.js~Sequelize.html#instance-constructor-constructor)
+// Database options, is the same with sequelize constructor options.
 const dbOptions = {
   database: 'test',
   username: 'root',
@@ -100,7 +100,7 @@ const dbOptions = {
   },
 };
 
-// automate options
+// Automate options
 const options = {
   type: 'js', // Which code style want to generate, supported: js/ts/egg/midway. Default is `js`.
   camelCase: false, // Model name camel case. Default is false.
@@ -126,6 +126,10 @@ const automate = new Automate(dbOptions, options);
   console.log(code);
 })()
 ```
+
+Database options `dbOptions` is the same with sequelize constructor options, you can find all options here: [https://sequelize.org/master/class/lib/sequelize.js~Sequelize.html#instance-constructor-constructor](https://sequelize.org/master/class/lib/sequelize.js~Sequelize.html#instance-constructor-constructor).
+
+#### Methods
 
 - `automate.getDefinitions()`: Get all model definitions. `sequelize-automate` will use these definitions to generate different codes.
 - `automate.run()`: Generate model codes.
