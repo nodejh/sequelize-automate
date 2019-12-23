@@ -1,11 +1,11 @@
 # Sequelize-Automate
 
 [![NPM version][npm-image]][npm-url]
+[![npm download][download-image]][download-url]
 [![build status][travis-image]][travis-url]
 [![Test coverage][codecov-image]][codecov-url]
 [![David deps][david-image]][david-url]
 [![Known Vulnerabilities][snyk-image]][snyk-url]
-[![npm download][download-image]][download-url]
 <!-- [![Greenkeeper badge](https://badges.greenkeeper.io/nodejh/sequelize-automate.svg)](https://greenkeeper.io/) -->
 <!-- [![Build Status](http://img.shields.io/travis/nodejh/sequelize-automate/master.svg)](https://travis-ci.org/nodejh/sequelize-automate) -->
 [![Dependency Status](https://david-dm.org/nodejh/sequelize-automate.svg)](https://david-dm.org/nodejh/sequelize-automate)
