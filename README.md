@@ -29,18 +29,40 @@
 
 Automatically generate models for [SequelizeJS](https://github.com/sequelize/sequelize). Support javascript, typescript, egg.js and midway.
 
-## Install
+## Installing
 
-global:
+### global
 
 ```shell script
 $ npm install -g sequelize-automate
 ```
 
-in poroject:
+You'll also have to manually install the driver for your database of choice:
 
 ```shell script
-$ npm install sequelize-automate
+# One of the following:
+$ npm install -g pg pg-hstore # Postgres
+$ npm install -g mysql2
+$ npm install -g mariadb
+$ npm install -g sqlite3
+$ npm install -g tedious # Microsoft SQL Server
+```
+
+### in poroject
+
+```shell script
+$ npm install sequelize-automate --save
+```
+
+You'll also have to manually install the driver for your database of choice:
+
+```shell script
+# One of the following:
+$ npm install --save pg pg-hstore # Postgres
+$ npm install --save mysql2
+$ npm install --save mariadb
+$ npm install --save sqlite3
+$ npm install --save tedious # Microsoft SQL Server
 ```
 
 
@@ -74,69 +96,7 @@ Options:
   --help          Show help                                            [boolean]
 ```
 
-
-### Programmatic API
-
-```javascript
-const Automate = require('sequelize-automate');
-
-// Database options, is the same with sequelize constructor options.
-const dbOptions = {
-  database: 'test',
-  username: 'root',
-  password: 'root',
-  dialect: 'mysql',
-  host: '127.0.0.1',
-  port: 3306,
-  define: {
-    underscored: false,
-    freezeTableName: false,
-    charset: 'utf8mb4',
-    timezone: '+00:00',
-    dialectOptions: {
-      collate: 'utf8_general_ci',
-    },
-    timestamps: false,
-  },
-};
-
-// Automate options
-const options = {
-  type: 'js', // Which code style want to generate, supported: js/ts/egg/midway. Default is `js`.
-  camelCase: false, // Model name camel case. Default is false.
-  fileNameCamelCase: true, // Model file name camel case. Default is false.
-  dir: 'models', // What directory to place the models. Default is `models`.
-  typesDir: 'models', // What directory to place the models' definitions (for typescript), default is the same with dir.
-  emptyDir: false, // Remove all files in `dir` and `typesDir` directories before generate models.
-  tables: null, // Use these tables, Example: ['user'], default is null.
-  skipTables: null, // Skip these tables. Example: ['user'], default is null.
-  tsNoCheck: false, // Whether add @ts-nocheck to model files, default is false.
-}
-
-const automate = new Automate(dbOptions, options);
-
-(async function main() {
-  // // get table definitions
-  // const definitions = await automate.getDefinitions();
-  // console.log(definitions);
-
-  // or generate codes
-  const code = await automate.run();
-  console.log(code);
-})()
-```
-
-Database options `dbOptions` is the same with sequelize constructor options, you can find all options here: [https://sequelize.org/master/class/lib/sequelize.js~Sequelize.html#instance-constructor-constructor](https://sequelize.org/master/class/lib/sequelize.js~Sequelize.html#instance-constructor-constructor).
-
-#### Methods
-
-- `automate.getDefinitions()`: Get all model definitions. `sequelize-automate` will use these definitions to generate different codes.
-- `automate.run()`: Generate model codes.
-
-
-## Example
-
-### Command Line
+#### Example
 
 ```shell script
 $ sequelize-automate -t js -h localhost -d test -u root -p root  -e mysql  -o models
@@ -210,7 +170,7 @@ module.exports = sequelize => {
 
 Which makes it easy for you to simply [Sequelize.import](https://sequelize.org/master/manual/models-definition.html#import) it.
 
-### Configuration options
+#### Configuration options
 
 You can use `-c, --config` option to specify a configuration file.
 
@@ -258,7 +218,7 @@ module.exports = {
 }
 ```
 
-### In project
+#### In project
 
 Also, you can use `sequelize-automate` in project.
 
@@ -266,12 +226,71 @@ First add a configuration file `sequelize-automate.config.json` as above and add
 
 ```json
 "script": {
-  // ...
   "automate": "sequelize-automate -c sequelize-automate.config.json"
 }
 ```
 
 Then you can use `npm run automate` to generate models.
+
+
+## Programmatic API
+
+```javascript
+const Automate = require('sequelize-automate');
+
+// Database options, is the same with sequelize constructor options.
+const dbOptions = {
+  database: 'test',
+  username: 'root',
+  password: 'root',
+  dialect: 'mysql',
+  host: '127.0.0.1',
+  port: 3306,
+  define: {
+    underscored: false,
+    freezeTableName: false,
+    charset: 'utf8mb4',
+    timezone: '+00:00',
+    dialectOptions: {
+      collate: 'utf8_general_ci',
+    },
+    timestamps: false,
+  },
+};
+
+// Automate options
+const options = {
+  type: 'js', // Which code style want to generate, supported: js/ts/egg/midway. Default is `js`.
+  camelCase: false, // Model name camel case. Default is false.
+  fileNameCamelCase: true, // Model file name camel case. Default is false.
+  dir: 'models', // What directory to place the models. Default is `models`.
+  typesDir: 'models', // What directory to place the models' definitions (for typescript), default is the same with dir.
+  emptyDir: false, // Remove all files in `dir` and `typesDir` directories before generate models.
+  tables: null, // Use these tables, Example: ['user'], default is null.
+  skipTables: null, // Skip these tables. Example: ['user'], default is null.
+  tsNoCheck: false, // Whether add @ts-nocheck to model files, default is false.
+}
+
+const automate = new Automate(dbOptions, options);
+
+(async function main() {
+  // // get table definitions
+  // const definitions = await automate.getDefinitions();
+  // console.log(definitions);
+
+  // or generate codes
+  const code = await automate.run();
+  console.log(code);
+})()
+```
+
+Database options `dbOptions` is the same with sequelize constructor options, you can find all options here: [https://sequelize.org/master/class/lib/sequelize.js~Sequelize.html#instance-constructor-constructor](https://sequelize.org/master/class/lib/sequelize.js~Sequelize.html#instance-constructor-constructor).
+
+### Methods
+
+- `automate.getDefinitions()`: Get all model definitions. `sequelize-automate` will use these definitions to generate different codes.
+- `automate.run()`: Generate model codes.
+
 
 ## Type
 
@@ -314,4 +333,4 @@ If you want to generate codes for other frameworks, please let me know.
 
 ## LICENSE
 
-[MIT](https://github.com/nodejh/sequelize-automate/blob/master/LICENSE).
+[MIT](https://github.com/nodejh/sequelize-automate/blob/master/LICENSE)
