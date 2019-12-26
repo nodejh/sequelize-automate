@@ -19,7 +19,7 @@ function getDefaultPort(dialect) {
 }
 
 const { argv } = yargs
-  .usage('Usage: sequelize-automate -t [type] -h <host> -d <database> -u <user> -x [password] -p [port]  --dialect [dialect] -o [/path/to/models] -c [/path/to/config]')
+  .usage('Usage: sequelize-automate -t [type] -h <host> -d <database> -u <user> -p [password] -P [port]  -e [dialect] -o [/path/to/models] -c [/path/to/config]')
   .help()
   .option('type', {
     alias: 't',
@@ -51,7 +51,8 @@ const { argv } = yargs
     default: 'root',
   })
   .option('port', {
-    describe: 'Port number for database. It is not for sqlite. ex) MySQL/MariaDB: 3306, Postgres: 5432, MSSQL: 1433',
+    alias: 'P',
+    describe: 'Port number for database. e.g. MySQL/MariaDB: 3306, Postgres: 5432, MSSQL: 1433',
     type: 'number',
   })
   .option('dialect', {
@@ -100,7 +101,7 @@ const dbOptions = _.assign({}, {
   password: argv.p,
   dialect: argv.e,
   host: argv.h || '127.0.0.1',
-  port: argv.port || getDefaultPort(argv.e),
+  port: argv.P || getDefaultPort(argv.e),
 }, configFile ? configFile.dbOptions : {});
 
 
@@ -111,7 +112,9 @@ const options = _.assign({}, {
   emptyDir: !!argv.r,
 }, configFile ? configFile.options : {});
 
-console.log('Database options:', JSON.stringify(dbOptions));
+const dbOptionsCopy = _.cloneDeep(dbOptions);
+dbOptionsCopy.password = '****';
+console.log('Database options:', JSON.stringify(dbOptionsCopy));
 console.log('Automate options:', JSON.stringify(options));
 
 const automate = new Automate(dbOptions, options);
