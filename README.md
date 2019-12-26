@@ -71,35 +71,34 @@ $ npm install --save tedious # Microsoft SQL Server
 ### Command Line
 
 ```shell script
-Usage: sequelize-automate -t [type] -h <host> -d <database> -u <user> -x [password] -p [port]  --dialect [dialect] -o [/path/to/models] -c
-[/path/to/config]
+Usage: sequelize-automate -t [type] -h <host> -d <database> -u <user> -p [password] -P [port]  -e [dialect] -o [/path/to/models] -c [/path/to/config]
 
 Options:
   --version       Show version number                                  [boolean]
+  --help          Show help                                            [boolean]
   --type, -t      Which code style want to generate.
-                [required] [choices: "js", "ts", "egg", "midway", "@ali/midway"]
-  --host, -h      IP/Hostname for the database.           [default: "localhost"]
-  --database, -d  Database name.                               [default: "test"]
-  --user, -u      Username for database.                       [default: "root"]
-  --password, -p  Password for database.                       [default: "root"]
-  --port          Port number for database. It is not for sqlite. ex)
-                  MySQL/MariaDB: 3306, Postgres: 5432, MSSQL: 1433
-                                                                 [default: 3306]
+                           [choices: "js", "ts", "egg", "midway", "@ali/midway"]
+  --host, -h      IP/Hostname for the database.  [string] [default: "localhost"]
+  --database, -d  Database name.                      [string] [default: "test"]
+  --user, -u      Username for database.              [string] [default: "root"]
+  --password, -p  Password for database.              [string] [default: "root"]
+  --port, -P      Port number for database. e.g. MySQL/MariaDB: 3306, Postgres:
+                  5432, MSSQL: 1433                                     [number]
   --dialect, -e   The dialect/engine that you're using: mysql, sqlite, postgres,
                   mssql
             [choices: "mysql", "sqlite", "postgres", "mssql"] [default: "mysql"]
-  --output, -o    What directory to place the models.        [default: "models"]
+  --output, -o    What directory to place the models.
+                                                    [string] [default: "models"]
   --camel, -C     Use camel case to name models       [boolean] [default: false]
-  --config, -c    Sequelize automate config file, see README.md
+  --config, -c    Sequelize automate config file, see README.md         [string]
   --emptyDir, -r  Remove all files in `dir` and `typesDir` directories before
                   generate models.                    [boolean] [default: false]
-  --help          Show help                                            [boolean]
 ```
 
 #### Example
 
 ```shell script
-$ sequelize-automate -t js -h localhost -d test -u root -p root  -e mysql  -o models
+$ sequelize-automate -t js -h localhost -d test -u root -p root -P 3306  -e mysql -o models
 ```
 
 Produces a file/files such as ./models/user.js which looks like:
