@@ -55,7 +55,7 @@ export default async function setupModel(context: IApplicationContext) {
   const options = {
     tableName: 'user',
     comment: 'user table',
-    indexs: [{
+    indexes: [{
       name: 'uk_name_email',
       unique: true,
       fields: [

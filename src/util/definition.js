@@ -174,12 +174,12 @@ function getDataType(field) {
 
 /**
  * Process a table
- * @param {object} params { structures, allIndexs, foreignKeys, options: { camelCase, dialect } }
- * @return {object} { attributes: { filed: { attribute } }, indexs: [{ name, type, fields }] }
+ * @param {object} params { structures, allIndexes, foreignKeys, options: { camelCase, dialect } }
+ * @return {object} { attributes: { filed: { attribute } }, indexes: [{ name, type, fields }] }
  */
 function processTable({
   structures,
-  allIndexs,
+  allIndexes,
   foreignKeys,
   options,
 }) {
@@ -193,8 +193,8 @@ function processTable({
     attributes[key].defaultValue = getDefaultValue(structure, dialect);
   });
 
-  const indexs = [];
-  _.forEach(allIndexs, (index) => {
+  const indexes = [];
+  _.forEach(allIndexes, (index) => {
     const fields = index.fields.map((o) => o.attribute);
     if (index.primary === true) {
       _.forEach(fields, (fieldName) => {
@@ -205,7 +205,7 @@ function processTable({
       const field = getFieldName(fields[0], camelCase);
       attributes[field].unique = index.name;
     } else {
-      indexs.push({
+      indexes.push({
         name: index.name,
         unique: index.unique,
         type: index.type,
@@ -227,21 +227,21 @@ function processTable({
     };
   });
 
-  return { attributes, indexs };
+  return { attributes, indexes };
 }
 
 /**
  * Get model definitions
- * @param {object} tables { structures, indexs, foreignKeys }
+ * @param {object} tables { structures, indexes, foreignKeys }
  * @param {object} options { camelCase, fileNameCamelCase }
- * @return {object} [{ modelName, modelFileName, tableName, attributes, indexs }]
+ * @return {object} [{ modelName, modelFileName, tableName, attributes, indexes }]
  */
 function getModelDefinitions(tables, options) {
   const { camelCase, fileNameCamelCase } = options || {};
   const definitions = _.map(tables, (table, tableName) => {
-    const { attributes, indexs } = processTable({
+    const { attributes, indexes } = processTable({
       structures: table.structures,
-      allIndexs: table.indexs,
+      allIndexes: table.indexes,
       foreignKeys: table.foreignKeys,
       options: { camelCase },
     });
@@ -253,7 +253,7 @@ function getModelDefinitions(tables, options) {
       modelFileName,
       tableName,
       attributes,
-      indexs,
+      indexes,
     };
   });
 

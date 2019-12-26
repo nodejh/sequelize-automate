@@ -129,10 +129,10 @@ function processOptionsProperties(nodes, definition) {
       case 'comment':
         node.value = t.stringLiteral(definition.tableComment || '');
         break;
-      case 'indexs':
+      case 'indexes':
         node.value = t.arrayExpression(
-          _.map(definition.indexs, (value) => {
-            const index = t.objectExpression([
+          _.map(definition.indexes, (value) => {
+            const properties = [
               t.objectProperty(
                 t.identifier('name'),
                 t.stringLiteral(value.name),
@@ -141,7 +141,7 @@ function processOptionsProperties(nodes, definition) {
                 t.identifier('unique'),
                 t.booleanLiteral(Boolean(value.unique)),
               ),
-              t.objectProperty(
+              value.type && t.objectProperty(
                 t.identifier('type'),
                 t.stringLiteral(value.type),
               ),
@@ -151,7 +151,8 @@ function processOptionsProperties(nodes, definition) {
                   _.map(value.fields, (field) => t.stringLiteral(field)),
                 ),
               ),
-            ]);
+            ];
+            const index = t.objectExpression(properties.filter((o) => o));
             return index;
           }),
         );

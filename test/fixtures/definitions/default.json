@@ -51,7 +51,7 @@
         "field": "updated_at"
       }
     },
-    "indexs": []
+    "indexes": []
   },
   {
     "modelName": "user_post_model",
@@ -114,7 +114,7 @@
         "field": "updated_at"
       }
     },
-    "indexs": [
+    "indexes": [
       {
         "name": "fk_user_id",
         "unique": false,

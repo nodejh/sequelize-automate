@@ -116,12 +116,11 @@ const options = {
 const automate = new Automate(dbOptions, options);
 
 (async function main() {
+  // // get table definitions
+  // const definitions = await automate.getDefinitions();
+  // console.log(definitions);
 
-  // get table definitions
-  const definitions = await automate.getDefinitions();
-  console.log(definitions);
-
-  // generate codes
+  // or generate codes
   const code = await automate.run();
   console.log(code);
 })()
@@ -202,7 +201,7 @@ module.exports = sequelize => {
   const options = {
     tableName: "user",
     comment: "",
-    indexs: []
+    indexes: []
   };
   const UserModel = sequelize.define("userModel", attributes, options);
   return UserModel;

@@ -80,7 +80,7 @@ class Automate {
       (tableName) => this.queryInterface.describeTable(tableName),
     ));
 
-    const tableIndexs = await Promise.all(tableNames.map(
+    const tableIndexes = await Promise.all(tableNames.map(
       (tableName) => this.queryInterface.showIndex(tableName),
     ));
 
@@ -92,7 +92,7 @@ class Automate {
     tableNames.forEach((tableName, i) => {
       tables[tableName] = {
         structures: tableStructures[i],
-        indexs: tableIndexs[i],
+        indexes: tableIndexes[i],
         foreignKeys: tableForeignKeys[i],
       };
     });
