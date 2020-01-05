@@ -1,5 +1,7 @@
 const _ = require('lodash');
 
+const regexpPostgresAutoIncrementValue = /nextval\(.*seq::regclass\)/;
+
 function getFieldName(fieldName, camelCase) {
   return camelCase ? _.camelCase(fieldName) : fieldName;
 }
@@ -62,7 +64,23 @@ function getDefaultValue(field, dialect) {
     }
   }
 
+  if (dialect === 'postgres' && regexpPostgresAutoIncrementValue.test(field.defaultValue)) {
+    // If dialect is postgres and the field is auto increment, set default value null
+    defaultValue = null;
+  }
+
   return defaultValue;
+}
+
+function getAutoIncrement(field, dialect) {
+  // postgres use serial to create auto increment field: nextval(${table}_${field_seq::regclass)
+  if (dialect === 'postgres' && regexpPostgresAutoIncrementValue.test(field.defaultValue)) {
+    return true;
+  }
+  if (_.isBoolean(field.autoIncrement)) {
+    return field.autoIncrement;
+  }
+  return false;
 }
 
 /**
@@ -191,6 +209,7 @@ function processTable({
     attributes[key].field = fieldName;
     attributes[key].type = getDataType(structure);
     attributes[key].defaultValue = getDefaultValue(structure, dialect);
+    attributes[key].autoIncrement = getAutoIncrement(structure, dialect);
   });
 
   const indexes = [];

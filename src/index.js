@@ -116,7 +116,7 @@ class Automate {
     const definitions = getModelDefinitions(allTables, {
       camelCase,
       fileNameCamelCase,
-      dialect: this.options.dialect,
+      dialect: this.dbOptions.dialect,
     });
     debug('get model definitions');
     return definitions;
