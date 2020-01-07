@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const _ = require("lodash");
 const Automate = require("../../index");
-const config = require("../fixtures/config");
+const config = require("../fixtures/definitions/config");
 
 function getDefinitions(name) {
   const codes = fs

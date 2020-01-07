@@ -1,0 +1,14 @@
+{
+  "dbOptions": {
+    "database": "jh",
+    "username": "jh",
+    "password": "",
+    "dialect": "postgres",
+    "host": "localhost"
+  },
+  "options": {
+    "type": "js",
+    "dir": ".tmp",
+    "emptyDir": true
+  }
+}

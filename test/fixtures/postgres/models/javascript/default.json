@@ -1,0 +1,12 @@
+[
+  {
+    "file": "company.js",
+    "code": "const {\n  DataTypes\n} = require('sequelize');\n\nmodule.exports = sequelize => {\n  const attributes = {\n    id: {\n      type: DataTypes.INTEGER,\n      allowNull: false,\n      defaultValue: null,\n      comment: null,\n      primaryKey: true,\n      field: \"id\",\n      autoIncrement: false\n    },\n    name: {\n      type: DataTypes.TEXT,\n      allowNull: false,\n      defaultValue: null,\n      comment: null,\n      primaryKey: false,\n      field: \"name\",\n      autoIncrement: false\n    },\n    age: {\n      type: DataTypes.INTEGER,\n      allowNull: false,\n      defaultValue: null,\n      comment: null,\n      primaryKey: false,\n      field: \"age\",\n      autoIncrement: false\n    },\n    address: {\n      type: DataTypes.CHAR(50),\n      allowNull: true,\n      defaultValue: null,\n      comment: null,\n      primaryKey: false,\n      field: \"address\",\n      autoIncrement: false\n    },\n    salary: {\n      type: DataTypes.REAL,\n      allowNull: true,\n      defaultValue: null,\n      comment: null,\n      primaryKey: false,\n      field: \"salary\",\n      autoIncrement: false\n    }\n  };\n  const options = {\n    tableName: \"company\",\n    comment: \"\",\n    indexes: []\n  };\n  const CompanyModel = sequelize.define(\"company_model\", attributes, options);\n  return CompanyModel;\n};",
+    "fileType": "model"
+  },
+  {
+    "file": "user.js",
+    "code": "const {\n  DataTypes\n} = require('sequelize');\n\nmodule.exports = sequelize => {\n  const attributes = {\n    id: {\n      type: DataTypes.INTEGER,\n      allowNull: false,\n      defaultValue: null,\n      comment: null,\n      primaryKey: true,\n      field: \"id\",\n      autoIncrement: true\n    },\n    name: {\n      type: DataTypes.TEXT,\n      allowNull: false,\n      defaultValue: null,\n      comment: null,\n      primaryKey: false,\n      field: \"name\",\n      autoIncrement: false\n    },\n    age: {\n      type: DataTypes.INTEGER,\n      allowNull: true,\n      defaultValue: null,\n      comment: null,\n      primaryKey: false,\n      field: \"age\",\n      autoIncrement: false\n    }\n  };\n  const options = {\n    tableName: \"user\",\n    comment: \"\",\n    indexes: []\n  };\n  const UserModel = sequelize.define(\"user_model\", attributes, options);\n  return UserModel;\n};",
+    "fileType": "model"
+  }
+]

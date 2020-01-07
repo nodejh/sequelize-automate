@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const Automate = require("../../index");
-const config = require("../fixtures/config");
+const config = require("../fixtures/definitions/config");
 
 function getCodes(name) {
   const codes = fs

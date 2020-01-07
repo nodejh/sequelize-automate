@@ -73,8 +73,7 @@ function getDefaultValue(field, dialect) {
 }
 
 function getAutoIncrement(field, dialect) {
-  console.log('field, dialect', field, dialect);
-  // postgres use serial to create auto increment field: nextval(${table}_${field_seq::regclass)
+  // postgres use serial to create auto-increment column: nextval(${table}_${field_seq::regclass)
   if (dialect === 'postgres' && regexpPostgresAutoIncrementValue.test(field.defaultValue)) {
     return true;
   }
