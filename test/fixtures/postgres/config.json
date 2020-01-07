@@ -4,7 +4,8 @@
     "username": "jh",
     "password": "",
     "dialect": "postgres",
-    "host": "localhost"
+    "host": "localhost",
+    "logging": false
   },
   "options": {
     "type": "js",
