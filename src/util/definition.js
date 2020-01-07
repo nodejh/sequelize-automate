@@ -73,6 +73,7 @@ function getDefaultValue(field, dialect) {
 }
 
 function getAutoIncrement(field, dialect) {
+  console.log('field, dialect', field, dialect);
   // postgres use serial to create auto increment field: nextval(${table}_${field_seq::regclass)
   if (dialect === 'postgres' && regexpPostgresAutoIncrementValue.test(field.defaultValue)) {
     return true;
@@ -205,7 +206,7 @@ function processTable({
   const attributes = {};
   _.forEach(structures, (structure, fieldName) => {
     const key = getFieldName(fieldName, camelCase);
-    attributes[key] = structure;
+    attributes[key] = _.cloneDeep(structure);
     attributes[key].field = fieldName;
     attributes[key].type = getDataType(structure);
     attributes[key].defaultValue = getDefaultValue(structure, dialect);
@@ -256,13 +257,13 @@ function processTable({
  * @return {object} [{ modelName, modelFileName, tableName, attributes, indexes }]
  */
 function getModelDefinitions(tables, options) {
-  const { camelCase, fileNameCamelCase } = options || {};
+  const { camelCase, fileNameCamelCase, dialect } = options || {};
   const definitions = _.map(tables, (table, tableName) => {
     const { attributes, indexes } = processTable({
       structures: table.structures,
       allIndexes: table.indexes,
       foreignKeys: table.foreignKeys,
-      options: { camelCase },
+      options: { camelCase, dialect },
     });
 
     const modelName = getModelName(tableName, camelCase);
