@@ -131,7 +131,7 @@ function getDataType(field) {
     return type;
   }
 
-  if (attr.match(/^varchar/)) {
+  if (attr.match(/^(varchar|nvarchar)/)) {
     return `DataTypes.STRING${typeLength}`;
   }
 
