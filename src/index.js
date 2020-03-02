@@ -13,7 +13,9 @@ class Automate {
     const defaultOptions = {
       type: 'js', // Which code style want to generate, supported: js/ts/egg/midway. Default is `js`.
       camelCase: false, // Model name camel case. Default is false.
+      noModelSuffix: true,
       fileNameCamelCase: false, // Model file name camel case. Default is false.
+      fileNameMatchesModel: true,
       dir: 'models', // What directory to place the models. Default is `models`.
       typesDir: null, // What directory to place the models' definitions (for typescript), default is the same with dir.
       emptyDir: false, // Remove all files in `dir` and `typesDir` directories before generate models.
@@ -32,7 +34,9 @@ class Automate {
     const supportTypes = ['js', 'ts', 'egg', 'midway', '@ali/midway'];
     assert(supportTypes.includes(this.options.type), 'type not support');
     assert(_.isBoolean(this.options.camelCase), 'Invalid params camelCase');
+    assert(_.isBoolean(this.options.noModelSuffix), 'Invalid params noModelSuffix');
     assert(_.isBoolean(this.options.fileNameCamelCase), 'Invalid params fileNameCamelCase');
+    assert(_.isBoolean(this.options.fileNameMatchesModel), 'Invalid params fileNameMatchesModel');
     assert(_.isString(this.options.dir), 'Invalid params dir');
     assert(_.isString(this.options.typesDir), 'Invalid params typesDir');
     assert(_.isBoolean(this.options.emptyDir), 'Invalid params cleanDir');
@@ -107,7 +111,9 @@ class Automate {
       tables,
       skipTables,
       camelCase,
+      noModelSuffix,
       fileNameCamelCase,
+      fileNameMatchesModel
     } = this.options;
     const allTables = await this.getTables({
       tables,
@@ -115,7 +121,9 @@ class Automate {
     });
     const definitions = getModelDefinitions(allTables, {
       camelCase,
+      noModelSuffix,
       fileNameCamelCase,
+      fileNameMatchesModel,
       dialect: this.dbOptions.dialect,
     });
     debug('get model definitions');
@@ -129,7 +137,9 @@ class Automate {
       tables,
       skipTables,
       camelCase,
+      noModelSuffix,
       fileNameCamelCase,
+      fileNameMatchesModel,
       tsNoCheck,
       dir,
       typesDir,
@@ -139,7 +149,9 @@ class Automate {
       tables,
       skipTables,
       camelCase,
+      noModelSuffix,
       fileNameCamelCase,
+      fileNameMatchesModel
     });
 
     const codes = generate(definitions, {
