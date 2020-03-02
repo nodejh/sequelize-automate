@@ -7,11 +7,11 @@ function getFieldName(fieldName, camelCase) {
 }
 
 function getModelName(tableName, camelCase, noModelSuffix) {
-  const modelString = camelCase
-    ? noModelSuffix
-      ? ''
-      : 'Model'
-    : '_model';
+  const modelString = noModelSuffix
+    ? ''
+    : camelCase
+      ? 'Model'
+      : '_model';
 
   return `${getFieldName(tableName, camelCase)}${modelString}`;
 }

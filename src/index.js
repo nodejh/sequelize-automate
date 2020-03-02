@@ -13,7 +13,7 @@ class Automate {
     const defaultOptions = {
       type: 'js', // Which code style want to generate, supported: js/ts/egg/midway. Default is `js`.
       camelCase: false, // Model name camel case. Default is false.
-      noModelSuffix: false, // Removes the "Model" suffix added to a model if camelCase is set to true.
+      noModelSuffix: false, // Removes the "Model" or "_model" suffix added to model names.
       fileNameCamelCase: false, // Model file name camel case. Default is false.
       fileNameMatchesModel: false, // Write the file with the same name as the model.
       dir: 'models', // What directory to place the models. Default is `models`.
