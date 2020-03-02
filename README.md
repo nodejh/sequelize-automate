@@ -261,9 +261,9 @@ const dbOptions = {
 const options = {
   type: 'js', // Which code style want to generate, supported: js/ts/egg/midway. Default is `js`.
   camelCase: false, // Model name camel case. Default is false.
-  noModelSuffix: false, // Removes the "Model" or "_model" suffix added to model names.
+  noModelSuffix: false, // Removes the "Model" or "_model" suffix added to model names. Default is false.
   fileNameCamelCase: false, // Model file name camel case. Default is false.
-  fileNameMatchesModel: false, // Write the file with the same name as the model.
+  fileNameMatchesModel: false, // Write the file with the same name as the model. Default is false.
   dir: 'models', // What directory to place the models. Default is `models`.
   typesDir: 'models', // What directory to place the models' definitions (for typescript), default is the same with dir.
   emptyDir: false, // Remove all files in `dir` and `typesDir` directories before generate models.
