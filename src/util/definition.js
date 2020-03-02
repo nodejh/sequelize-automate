@@ -6,8 +6,13 @@ function getFieldName(fieldName, camelCase) {
   return camelCase ? _.camelCase(fieldName) : fieldName;
 }
 
-function getModelName(tableName, camelCase) {
-  const modelString = camelCase ? 'Model' : '_model';
+function getModelName(tableName, camelCase, noModelSuffix) {
+  const modelString = camelCase
+    ? noModelSuffix
+      ? ''
+      : 'Model'
+    : '_model';
+
   return `${getFieldName(tableName, camelCase)}${modelString}`;
 }
 
@@ -199,6 +204,7 @@ function processTable({
   structures,
   allIndexes,
   foreignKeys,
+  noModelSuffix,
   options,
 }) {
   const { camelCase, dialect } = options;
@@ -242,7 +248,7 @@ function processTable({
     const filed = getFieldName(columnName, camelCase);
     attributes[filed].references = {
       key: referencedColumnName,
-      model: getModelName(referencedTableName, camelCase),
+      model: getModelName(referencedTableName, camelCase, noModelSuffix),
     };
   });
 
@@ -256,17 +262,18 @@ function processTable({
  * @return {object} [{ modelName, modelFileName, tableName, attributes, indexes }]
  */
 function getModelDefinitions(tables, options) {
-  const { camelCase, fileNameCamelCase, dialect } = options || {};
+  const { camelCase, noModelSuffix, fileNameCamelCase, fileNameMatchModel, dialect, } = options || {};
   const definitions = _.map(tables, (table, tableName) => {
     const { attributes, indexes } = processTable({
       structures: table.structures,
       allIndexes: table.indexes,
       foreignKeys: table.foreignKeys,
+      noModelSuffix: noModelSuffix,
       options: { camelCase, dialect },
     });
 
-    const modelName = getModelName(tableName, camelCase);
-    const modelFileName = getFieldName(tableName, fileNameCamelCase);
+    const modelName = getModelName(tableName, camelCase, noModelSuffix);
+    const modelFileName = fileNameMatchModel ? modelName : getFieldName(tableName, fileNameCamelCase);
     return {
       modelName,
       modelFileName,
