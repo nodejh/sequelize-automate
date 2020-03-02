@@ -13,9 +13,9 @@ class Automate {
     const defaultOptions = {
       type: 'js', // Which code style want to generate, supported: js/ts/egg/midway. Default is `js`.
       camelCase: false, // Model name camel case. Default is false.
-      noModelSuffix: true,
+      noModelSuffix: false,
       fileNameCamelCase: false, // Model file name camel case. Default is false.
-      fileNameMatchesModel: true,
+      fileNameMatchesModel: false,
       dir: 'models', // What directory to place the models. Default is `models`.
       typesDir: null, // What directory to place the models' definitions (for typescript), default is the same with dir.
       emptyDir: false, // Remove all files in `dir` and `typesDir` directories before generate models.
