@@ -8,20 +8,20 @@ const processMidway = require('./midway');
  * @param {object} definition definition
  * @param {object} options
  */
-function generate(definition, options) {
+function generate(definition, templatePath, options) {
   const { type, tsNoCheck } = options;
   switch (type) {
     case 'js':
-      return processJS(definition, { isEgg: false });
+      return processJS(definition, templatePath, { isEgg: false });
     case 'ts':
-      return processTS(definition, { tsNoCheck });
+      return processTS(definition, templatePath, { tsNoCheck });
     case 'egg':
-      return processJS(definition, { isEgg: true });
+      return processJS(definition, templatePath, { isEgg: true });
     case 'midway':
-      return processMidway(definition, { tsNoCheck });
+      return processMidway(definition, templatePath, { tsNoCheck });
     case '@ali/midway':
       // special for @ali/midway
-      return processMidway(definition, { tsNoCheck, isAliMidway: true });
+      return processMidway(definition, templatePath, { tsNoCheck, isAliMidway: true });
     default:
       break;
   }

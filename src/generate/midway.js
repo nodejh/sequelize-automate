@@ -19,9 +19,9 @@ const {
  * @param {object} definition
  * @param {object} options
  */
-function generateCode(definition, options) {
+function generateCode(definition, templatePath, options) {
   const source = fs
-    .readFileSync(join(__dirname, './template/midway/user.text'))
+    .readFileSync(templatePath ? templatePath : join(__dirname, file))
     .toString();
 
   const ast = parse(source, {
@@ -160,12 +160,12 @@ function generateDB(options) {
   return code;
 }
 
-function process(definitions, options) {
+function process(definitions, templatePath, options) {
   const modelCodes = definitions.map((definition) => {
     const { modelFileName } = definition;
     const fileType = 'model';
     const file = `${modelFileName}.ts`;
-    const code = generateCode(definition, options);
+    const code = generateCode(definition, templatePath, options);
     return {
       file,
       code,

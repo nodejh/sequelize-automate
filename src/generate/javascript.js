@@ -17,10 +17,10 @@ const {
  * @param {object} definition
  * @param {object} options
  */
-function generateCode(definition, options) {
+function generateCode(definition, templatePath, options) {
   const file = options.isEgg ? './template/egg/user.text' : './template/javascript/user.text';
   const source = fs
-    .readFileSync(join(__dirname, file))
+    .readFileSync(templatePath ? templatePath : join(__dirname, file))
     .toString();
 
   const ast = parse(source, {
@@ -71,12 +71,12 @@ function generateCode(definition, options) {
   return code;
 }
 
-function process(definitions, options) {
+function process(definitions, templatePath, options) {
   const modelCodes = definitions.map((definition) => {
     const { modelFileName } = definition;
     const fileType = 'model';
     const file = `${modelFileName}.js`;
-    const code = generateCode(definition, options);
+    const code = generateCode(definition, templatePath, options);
     return {
       file,
       code,

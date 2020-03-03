@@ -21,7 +21,9 @@ function getModelName(tableName, camelCase, noModelSuffix) {
  * @param {object} field field
  * @param {string} dialect -dialect
  */
-function getDefaultValue(field, dialect) {
+function getDefaultValue(field, dialect, sequelizeNamespace) {
+  sequelizeNamespace = sequelizeNamespace ? `${sequelizeNamespace}` : 'sequelize'
+
   let { defaultValue } = field;
   if (
     dialect === 'mssql'
@@ -44,7 +46,7 @@ function getDefaultValue(field, dialect) {
   if (_.isString(field.defaultValue)) {
     const fieldType = field.type.toLowerCase();
     if (_.endsWith(field.defaultValue, '()')) {
-      defaultValue = `sequelize.fn('${field.defaultValue.replace(
+      defaultValue = `${sequelizeNamespace}.fn('${field.defaultValue.replace(
         /\(\)$/,
         '',
       )}')`;
@@ -64,7 +66,7 @@ function getDefaultValue(field, dialect) {
           field.defaultValue.toLowerCase(),
         )
       ) {
-        defaultValue = `sequelize.literal('${field.defaultValue}')`;
+        defaultValue = `${sequelizeNamespace}.literal('${field.defaultValue}')`;
       }
     }
   }
@@ -93,15 +95,17 @@ function getAutoIncrement(field, dialect) {
  * @param {object} field table field
  * @return {string}
  */
-function getDataType(field) {
+function getDataType(field, sequelizeNamespace) {
+  sequelizeNamespace = sequelizeNamespace ? `${sequelizeNamespace}.` : ''
+
   if (field.type.indexOf('ENUM') === 0) {
-    return `DataTypes.${field.type}`;
+    return `${sequelizeNamespace}DataTypes.${field.type}`;
   }
 
   const attr = (field.type || '').toLowerCase();
 
   if (attr === 'boolean' || attr === 'bit(1)' || attr === 'bit') {
-    return 'DataTypes.BOOLEAN';
+    return `${sequelizeNamespace}DataTypes.BOOLEAN`;
   }
 
   const length = attr.match(/\(\d+\)/);
@@ -109,7 +113,7 @@ function getDataType(field) {
   if (attr.match(/^(smallint|mediumint|tinyint|int)/)) {
     const typeInt = attr.match(/^bigint/) ? 'BIGINT' : 'INTEGER';
 
-    let type = `DataTypes.${typeInt}${typeLength}`;
+    let type = `${sequelizeNamespace}DataTypes.${typeInt}${typeLength}`;
     const unsigned = attr.match(/unsigned/i);
     if (unsigned) {
       type += '.UNSIGNED';
@@ -123,7 +127,7 @@ function getDataType(field) {
   }
 
   if (attr.match(/^bigint/)) {
-    let type = 'DataTypes.BIGINT';
+    let type = `${sequelizeNamespace}DataTypes.BIGINT`;
     const unsigned = attr.match(/unsigned/i);
     if (unsigned) {
       type += '.UNSIGNED';
@@ -137,59 +141,59 @@ function getDataType(field) {
   }
 
   if (attr.match(/^(varchar|nvarchar)/)) {
-    return `DataTypes.STRING${typeLength}`;
+    return `${sequelizeNamespace}DataTypes.STRING${typeLength}`;
   }
 
   if (attr.match(/^char/)) {
-    return `DataTypes.CHAR${typeLength}`;
+    return `${sequelizeNamespace}DataTypes.CHAR${typeLength}`;
   }
 
   if (attr.match(/^real/)) {
-    return 'DataTypes.REAL';
+    return `${sequelizeNamespace}DataTypes.REAL`;
   }
 
   if (attr.match(/text|ntext$/)) {
-    return 'DataTypes.TEXT';
+    return `${sequelizeNamespace}DataTypes.TEXT`;
   }
 
   if (attr === 'date') {
-    return 'DataTypes.DATEONLY';
+    return `${sequelizeNamespace}DataTypes.DATEONLY`;
   }
 
   if (attr.match(/^(date|timestamp)/)) {
-    return 'DataTypes.DATE';
+    return `${sequelizeNamespace}DataTypes.DATE`;
   }
 
   if (attr.match(/^(time)/)) {
-    return 'DataTypes.TIME';
+    return `${sequelizeNamespace}DataTypes.TIME`;
   }
 
   if (attr.match(/^(float|float4)/)) {
-    return 'DataTypes.FLOAT';
+    return `${sequelizeNamespace}DataTypes.FLOAT`;
   }
 
   if (attr.match(/^decimal/)) {
-    return 'DataTypes.DECIMAL';
+    return `${sequelizeNamespace}DataTypes.DECIMAL`;
   }
 
   if (attr.match(/^(float8|double precision|numeric)/)) {
-    return 'DataTypes.DOUBLE';
+    return `${sequelizeNamespace}DataTypes.DOUBLE`;
   }
 
   if (attr.match(/^uuid|uniqueidentifier/)) {
-    return 'DataTypes.UUIDV4';
+    return `${sequelizeNamespace}DataTypes.UUIDV4`;
   }
 
   if (attr.match(/^jsonb/)) {
-    return 'DataTypes.JSONB';
+    return `${sequelizeNamespace}DataTypes.JSONB`;
   }
 
   if (attr.match(/^json/)) {
-    return 'DataTypes.JSON';
+    return `${sequelizeNamespace}DataTypes.JSON`;
   }
 
   if (attr.match(/^geometry/)) {
-    return 'DataTypes.GEOMETRY';
+    return `${sequelizeNamespace}DataTypes.GEOMETRY`;
   }
 
   return attr;
@@ -201,6 +205,7 @@ function getDataType(field) {
  * @return {object} { attributes: { filed: { attribute } }, indexes: [{ name, type, fields }] }
  */
 function processTable({
+  sequelizeNamespace,
   structures,
   allIndexes,
   foreignKeys,
@@ -213,8 +218,8 @@ function processTable({
     const key = getFieldName(fieldName, camelCase);
     attributes[key] = _.cloneDeep(structure);
     attributes[key].field = fieldName;
-    attributes[key].type = getDataType(structure);
-    attributes[key].defaultValue = getDefaultValue(structure, dialect);
+    attributes[key].type = getDataType(structure, sequelizeNamespace);
+    attributes[key].defaultValue = getDefaultValue(structure, dialect, sequelizeNamespace);
     attributes[key].autoIncrement = getAutoIncrement(structure, dialect);
   });
 
@@ -262,9 +267,10 @@ function processTable({
  * @return {object} [{ modelName, modelFileName, tableName, attributes, indexes }]
  */
 function getModelDefinitions(tables, options) {
-  const { camelCase, noModelSuffix, fileNameCamelCase, fileNameMatchModel, dialect, } = options || {};
+  const { sequelizeNamespace, camelCase, noModelSuffix, fileNameCamelCase, fileNameMatchModel, dialect, } = options || {};
   const definitions = _.map(tables, (table, tableName) => {
     const { attributes, indexes } = processTable({
+      sequelizeNamespace: sequelizeNamespace,
       structures: table.structures,
       allIndexes: table.indexes,
       foreignKeys: table.foreignKeys,

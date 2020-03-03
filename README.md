@@ -260,6 +260,8 @@ const dbOptions = {
 // Automate options
 const options = {
   type: 'js', // Which code style want to generate, supported: js/ts/egg/midway. Default is `js`.
+  sequelizeNamespace: '', ////Specify a custom sequelize namespace that will be used during model generation instead of requiring sequelize, e.g. 'app.sequelize'. Default is empty string.
+  templatePath: '', //Specify a path to a custom template for model generation. Default uses sequelize-automate template depending on 'type'.
   camelCase: false, // Model name camel case. Default is false.
   noModelSuffix: false, // Removes the "Model" or "_model" suffix added to model names. Default is false.
   fileNameCamelCase: false, // Model file name camel case. Default is false.

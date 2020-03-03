@@ -12,6 +12,8 @@ class Automate {
     debug('sequelize-automate constructor');
     const defaultOptions = {
       type: 'js', // Which code style want to generate, supported: js/ts/egg/midway. Default is `js`.
+      sequelizeNamespace: '', //Specify a custom sequelize namespace that will be used during model generation instead of requiring sequelize, e.g. 'app.sequelize'. Default is empty string.
+      templatePath: '', //Specify a path to a custom template for model generation. Default uses sequelize-automate template depending on 'type'.
       camelCase: false, // Model name camel case. Default is false.
       noModelSuffix: false, // Removes the "Model" or "_model" suffix added to model names. Default is false.
       fileNameCamelCase: false, // Model file name camel case. Default is false.
@@ -34,6 +36,8 @@ class Automate {
     const supportTypes = ['js', 'ts', 'egg', 'midway', '@ali/midway'];
     assert(supportTypes.includes(this.options.type), 'type not support');
     assert(_.isBoolean(this.options.camelCase), 'Invalid params camelCase');
+    assert(_.isString(this.options.sequelizeNamespace), 'Invalid params sequelizeNamespace');
+    assert(_.isString(this.options.templatePath), 'Invalid params templatePath');
     assert(_.isBoolean(this.options.noModelSuffix), 'Invalid params noModelSuffix');
     assert(_.isBoolean(this.options.fileNameCamelCase), 'Invalid params fileNameCamelCase');
     assert(_.isBoolean(this.options.fileNameMatchesModel), 'Invalid params fileNameMatchesModel');
@@ -108,6 +112,7 @@ class Automate {
 
   async getDefinitions() {
     const {
+      sequelizeNamespace,
       tables,
       skipTables,
       camelCase,
@@ -120,6 +125,7 @@ class Automate {
       skipTables,
     });
     const definitions = getModelDefinitions(allTables, {
+      sequelizeNamespace,
       camelCase,
       noModelSuffix,
       fileNameCamelCase,
@@ -134,6 +140,8 @@ class Automate {
   async run() {
     const {
       type,
+      sequelizeNamespace,
+      templatePath,
       tables,
       skipTables,
       camelCase,
@@ -146,6 +154,7 @@ class Automate {
       emptyDir,
     } = this.options;
     const definitions = await this.getDefinitions({
+      sequelizeNamespace,
       tables,
       skipTables,
       camelCase,
@@ -154,7 +163,7 @@ class Automate {
       fileNameMatchesModel
     });
 
-    const codes = generate(definitions, {
+    const codes = generate(definitions, templatePath, {
       type,
       tsNoCheck,
     });
