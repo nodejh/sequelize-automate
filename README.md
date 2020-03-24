@@ -81,7 +81,7 @@ Options:
   --host, -h      IP/Hostname for the database.  [string] [default: "localhost"]
   --database, -d  Database name.                      [string] [default: "test"]
   --user, -u      Username for database.              [string] [default: "root"]
-  --password, -p  Password for database.              [string] [default: "root"]
+  --password, -p  Password for database.              [string] 
   --port, -P      Port number for database. e.g. MySQL/MariaDB: 3306, Postgres:
                   5432, MSSQL: 1433                                     [number]
   --dialect, -e   The dialect/engine that you're using: mysql, sqlite, postgres,
