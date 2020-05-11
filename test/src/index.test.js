@@ -15,7 +15,7 @@ function getDefinitions(name) {
 
 describe("test/src/index.test.js", () => {
   describe("getDefinitions()", () => {
-    test("should get table definitions", async () => {
+    test.only("should get table definitions", async () => {
       const automate = new Automate(config.dbOptions, config.options);
       const definitions = await automate.getDefinitions();
       const expected = getDefinitions("default");
