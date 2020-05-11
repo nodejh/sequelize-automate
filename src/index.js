@@ -52,7 +52,8 @@ class Automate {
     ));
 
     if (_.isArray(tables)) {
-      tables.map((table) => assert(allTables.includes(table), `Table: ${table} not exist.`));
+      // Fix: https://github.com/nodejh/sequelize-automate/issues/19
+      // tables.map((table) => assert(allTables.includes(table), `Table: ${table} not exist.`));
       return tables;
     }
 
