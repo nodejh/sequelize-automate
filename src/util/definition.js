@@ -11,6 +11,7 @@ function getModelName(tableName, camelCase) {
   return `${getFieldName(tableName, camelCase)}${modelString}`;
 }
 
+
 /**
  * Get default value
  * @param {object} field field
@@ -94,17 +95,18 @@ function getDataType(field) {
   }
 
   const attr = (field.type || '').toLowerCase();
-
   if (attr === 'boolean' || attr === 'bit(1)' || attr === 'bit') {
     return 'DataTypes.BOOLEAN';
   }
 
+  // Display width specification for integer data types was deprecated in MySQL 8.0.17
+  // https://dev.mysql.com/doc/relnotes/mysql/8.0/en/news-8-0-19.html
   const length = attr.match(/\(\d+\)/);
+  // TODO: remove width for integer?
+
   const typeLength = !_.isNull(length) ? length : '';
   if (attr.match(/^(smallint|mediumint|tinyint|int)/)) {
-    const typeInt = attr.match(/^bigint/) ? 'BIGINT' : 'INTEGER';
-
-    let type = `DataTypes.${typeInt}${typeLength}`;
+    let type = `DataTypes.INTEGER${typeLength}`;
     const unsigned = attr.match(/unsigned/i);
     if (unsigned) {
       type += '.UNSIGNED';
@@ -167,7 +169,8 @@ function getDataType(field) {
     return 'DataTypes.DECIMAL';
   }
 
-  if (attr.match(/^(float8|double precision|numeric)/)) {
+  // TODO: integer, bigint, float and double also support unsigned and zerofill properties, but PostgreSQL dose not
+  if (attr.match(/^(float8|double precision|numeric|double)/)) {
     return 'DataTypes.DOUBLE';
   }
 

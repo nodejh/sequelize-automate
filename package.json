@@ -1,6 +1,6 @@
 {
   "name": "sequelize-automate",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Automatically generate bare sequelize models from your database.",
   "main": "index",
   "keywords": [
@@ -52,7 +52,7 @@
     "eslint-plugin-import": "^2.19.1",
     "jest": "^24.9.0",
     "mariadb": "^2.1.4",
-    "mysql2": "^2.0.2",
+    "mysql2": "^2.1.0",
     "pg": "^7.15.1",
     "pg-hstore": "^2.3.3",
     "sqlite3": "^4.1.1",

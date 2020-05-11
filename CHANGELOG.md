@@ -13,3 +13,10 @@
 ## 2020.05.11 1.2.1
 
 - fix: `queryInterface.showAllTables` does not find all tables. [#19](https://github.com/nodejh/sequelize-automate/issues/19)
+
+## 2020.05.11 1.2.2
+
+- fix: Data type "double unsigned" (MySQL) throws an error. [#17](https://github.com/nodejh/sequelize-automate/issues/17)
+- fix: ReferenceError: sequelize is not defined. [#21](https://github.com/nodejh/sequelize-automate/issues/21)
+
+
