@@ -48,7 +48,7 @@ $ npm install -g sqlite3
 $ npm install -g tedious # Microsoft SQL Server
 ```
 
-### in poroject
+### in project
 
 ```shell script
 $ npm install sequelize-automate --save
