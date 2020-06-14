@@ -213,6 +213,11 @@ function processTable({
     attributes[key].type = getDataType(structure);
     attributes[key].defaultValue = getDefaultValue(structure, dialect);
     attributes[key].autoIncrement = getAutoIncrement(structure, dialect);
+
+    // if autoIncrement is true, delete defaultValue field to prevent non-valid SQL code output
+    if (attributes[key].autoIncrement) {
+      delete attributes[key].defaultValue;
+    }
   });
 
   const indexes = [];
@@ -230,7 +235,6 @@ function processTable({
       indexes.push({
         name: index.name,
         unique: index.unique,
-        type: index.type,
         fields,
       });
     }
@@ -245,7 +249,7 @@ function processTable({
     const filed = getFieldName(columnName, camelCase);
     attributes[filed].references = {
       key: referencedColumnName,
-      model: getModelName(referencedTableName, camelCase),
+      model: referencedTableName,
     };
   });
 
