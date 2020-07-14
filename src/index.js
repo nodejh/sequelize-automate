@@ -20,6 +20,7 @@ class Automate {
       tables: null, // Use these tables, Example: ['user'], default is null.
       skipTables: null, // Skip these tables. Example: ['user'], default is null.
       tsNoCheck: false, // Whether add `@ts-nocheck` to model files, default is false.
+      matchTable: null
     };
 
     // https://sequelize.org/master/class/lib/sequelize.js~Sequelize.html#instance-constructor-constructor
@@ -46,7 +47,16 @@ class Automate {
 
   async getTableNames({ tables, skipTables }) {
     // TODO: check all dialects https://github.com/sequelize/sequelize/issues/11451
-    const tableNames = await this.queryInterface.showAllTables();
+    const allTableNames = await this.queryInterface.showAllTables();
+
+    let tableNames = allTableNames;
+    if (this.options.matchTable !== null) {
+      const regex = RegExp(this.options.matchTable);
+      tableNames = allTableNames.filter((tableName) => (
+        _.isPlainObject(tableName) ? regex.test(tableName.tableName) : regex.test(tableName)
+      ));
+    }
+
     const allTables = _.map(tableNames, (tableName) => (
       _.isPlainObject(tableName) ? tableName.tableName : tableName
     ));

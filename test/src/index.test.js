@@ -69,5 +69,19 @@ describe("test/src/index.test.js", () => {
       const expected = getDefinitions("user");
       expect(definitions).toEqual(expected);
     });
+
+    test("filter table: ", async () => {
+      const automate = new Automate(
+        config.dbOptions,
+        _.assign({}, config.options, {
+          matchTable: 'post'
+        })
+      );
+
+      const definitions = await automate.getDefinitions();
+      expect(definitions[0].modelName).toEqual('user_post_model');
+      expect(definitions[0].tableName).toEqual('user_post');
+      expect(definitions[0].modelFileName).toEqual('user_post');
+    });
   });
 });
