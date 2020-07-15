@@ -74,7 +74,7 @@ describe("test/src/index.test.js", () => {
       const automate = new Automate(
         config.dbOptions,
         _.assign({}, config.options, {
-          matchTable: 'post'
+          match: 'post'
         })
       );
 

@@ -20,7 +20,7 @@ class Automate {
       tables: null, // Use these tables, Example: ['user'], default is null.
       skipTables: null, // Skip these tables. Example: ['user'], default is null.
       tsNoCheck: false, // Whether add `@ts-nocheck` to model files, default is false.
-      matchTable: null
+      match: null // Regex to match table name
     };
 
     // https://sequelize.org/master/class/lib/sequelize.js~Sequelize.html#instance-constructor-constructor
@@ -50,8 +50,8 @@ class Automate {
     const allTableNames = await this.queryInterface.showAllTables();
 
     let tableNames = allTableNames;
-    if (this.options.matchTable !== null) {
-      const regex = RegExp(this.options.matchTable);
+    if (this.options.match !== null) {
+      const regex = RegExp(this.options.match);
       tableNames = allTableNames.filter((tableName) => (
         _.isPlainObject(tableName) ? regex.test(tableName.tableName) : regex.test(tableName)
       ));

@@ -93,6 +93,7 @@ Options:
   --config, -c    Sequelize automate config file, see README.md         [string]
   --emptyDir, -r  Remove all files in `dir` and `typesDir` directories before
                   generate models.                    [boolean] [default: false]
+  --match, -m     Match tables using given RegExp.    [string] [default: null]
 ```
 
 #### Example
@@ -268,6 +269,7 @@ const options = {
   tables: null, // Use these tables, Example: ['user'], default is null.
   skipTables: null, // Skip these tables. Example: ['user'], default is null.
   tsNoCheck: false, // Whether add @ts-nocheck to model files, default is false.
+  match: null // RegExp to match table name
 }
 
 const automate = new Automate(dbOptions, options);

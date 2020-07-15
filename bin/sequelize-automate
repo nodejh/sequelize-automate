@@ -83,6 +83,11 @@ const { argv } = yargs
     type: 'boolean',
     default: false,
     describe: 'Remove all files in `dir` and `typesDir` directories before generate models.',
+  }).option('match', {
+    alias: 'm',
+    type: 'string',
+    default: null,
+    describe: 'Match tables using given RegExp.',
   });
 
 let configFile = null;
