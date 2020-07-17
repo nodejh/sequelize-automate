@@ -83,6 +83,7 @@ class Automate {
     const tableNames = await this.getTableNames({
       tables: options.tables,
       skipTables: options.skipTables,
+      match: options.match,
     });
 
     debug('tableNames: ', tableNames);
