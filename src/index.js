@@ -45,17 +45,11 @@ class Automate {
     this.queryInterface = this.sequelize.getQueryInterface();
   }
 
-  async getTableNames({ tables, skipTables }) {
+  async getTableNames({ tables, skipTables, match }) {
     // TODO: check all dialects https://github.com/sequelize/sequelize/issues/11451
     const allTableNames = await this.queryInterface.showAllTables();
 
     let tableNames = allTableNames;
-    if (this.options.match !== null) {
-      const regex = RegExp(this.options.match);
-      tableNames = allTableNames.filter((tableName) => (
-        _.isPlainObject(tableName) ? regex.test(tableName.tableName) : regex.test(tableName)
-      ));
-    }
 
     const allTables = _.map(tableNames, (tableName) => (
       _.isPlainObject(tableName) ? tableName.tableName : tableName
@@ -70,6 +64,11 @@ class Automate {
     if (_.isArray(skipTables)) {
       skipTables.map((table) => assert(allTables.includes(table), `Table: ${table} not exist.`));
       return _.difference(allTables, skipTables);
+    }
+
+    if (match && (_.isRegExp(match) || _.isString(match))) {
+      const regex = _.isRegExp(match) ? match : new RegExp(match);
+      return allTables.filter(table => regex.test(table));
     }
 
     return allTables;
