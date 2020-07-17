@@ -48,7 +48,6 @@ const { argv } = yargs
     alias: 'p',
     describe: 'Password for database.',
     type: 'string',
-    default: 'root',
   })
   .option('port', {
     alias: 'P',
@@ -118,7 +117,11 @@ const options = _.assign({}, {
 }, configFile ? configFile.options : {});
 
 const dbOptionsCopy = _.cloneDeep(dbOptions);
-dbOptionsCopy.password = '****';
+if (dbOptionsCopy.password !== undefined)
+  dbOptionsCopy.password = '*'.repeat(dbOptionsCopy.password.length);
+//Added for better readability on command output
+else dbOptionsCopy.password = null;
+
 console.log('Database options:', JSON.stringify(dbOptionsCopy));
 console.log('Automate options:', JSON.stringify(options));
 
