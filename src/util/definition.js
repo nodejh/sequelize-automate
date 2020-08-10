@@ -267,7 +267,7 @@ function processTable({
  * @return {object} [{ modelName, modelFileName, tableName, attributes, indexes }]
  */
 function getModelDefinitions(tables, options) {
-  const { sequelizeNamespace, camelCase, noModelSuffix, fileNameCamelCase, fileNameMatchModel, dialect, } = options || {};
+  const { sequelizeNamespace, camelCase, noModelSuffix, fileNameCamelCase, fileNameMatchesModel, dialect, } = options || {};
   const definitions = _.map(tables, (table, tableName) => {
     const { attributes, indexes } = processTable({
       sequelizeNamespace: sequelizeNamespace,
@@ -279,7 +279,7 @@ function getModelDefinitions(tables, options) {
     });
 
     const modelName = getModelName(tableName, camelCase, noModelSuffix);
-    const modelFileName = fileNameMatchModel ? modelName : getFieldName(tableName, fileNameCamelCase);
+    const modelFileName = fileNameMatchesModel ? modelName : getFieldName(tableName, fileNameCamelCase);
     return {
       modelName,
       modelFileName,
