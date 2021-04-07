@@ -24,7 +24,10 @@ function getDefaultValueExpression(defaultValue) {
   if (_.isNumber(defaultValue)) {
     return t.numericLiteral(defaultValue);
   }
-
+  
+  if(_.isBoolean(defaultValue)) {
+    return t.booleanLiteral(defaultValue);
+  }
   return t.nullLiteral();
 }
 
